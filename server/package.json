@@ -1,0 +1,32 @@
+{
+    "name": "backend",
+    "version": "1.0.0",
+    "main": "server.js",
+    "scripts": {
+        "start": "node server.js",
+        "dev": "nodemon server.js"
+    },
+    "dependencies": {
+        "axios": "^1.13.2",
+        "bcryptjs": "^2.4.3",
+        "cookie-parser": "^1.4.7",
+        "cors": "^2.8.5",
+        "dotenv": "^16.6.1",
+        "express": "^4.22.1",
+        "express-mongo-sanitize": "^2.2.0",
+        "express-rate-limit": "^8.2.1",
+        "express-validator": "^7.3.1",
+        "google-auth-library": "^10.5.0",
+        "helmet": "^8.1.0",
+        "jsonwebtoken": "^9.0.3",
+        "mongoose": "^7.5.0",
+        "nodemailer": "^6.9.9",
+        "nodeman": "^1.1.2",
+        "pg-sdk-node": "https://phonepe.mycloudrepo.io/public/repositories/phonepe-pg-sdk-node/releases/v2/phonepe-pg-sdk-node-2.0.3.tgz",
+        "socket.io": "^4.8.1",
+        "xss-clean": "^0.1.4"
+    },
+    "devDependencies": {
+        "nodemon": "^3.0.1"
+    }
+}
