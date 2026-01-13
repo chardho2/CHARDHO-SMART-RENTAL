@@ -11,7 +11,7 @@ const authenticateToken = async (req, res, next) => {
         const token = authHeader && authHeader.split(' ')[1]; // Bearer TOKEN
 
         if (!token) {
-            console.log('❌ Auth Middleware: No token provided');
+            console.log(`❌ Auth Middleware: No token provided for ${req.path}`);
             return res.status(401).json({
                 success: false,
                 message: 'Access token is required'
@@ -23,7 +23,10 @@ const authenticateToken = async (req, res, next) => {
         try {
             decoded = jwt.verify(token, process.env.JWT_SECRET);
         } catch (err) {
-            console.log('❌ Auth Middleware: Token verification failed:', err.message);
+            console.log(`❌ Auth Middleware: Token verification failed for ${req.path}: ${err.message}`);
+            if (err.name === 'TokenExpiredError') {
+                console.log('⏰ Token specifically expired at:', err.expiredAt);
+            }
             return res.status(401).json({ success: false, message: 'Invalid or expired token' });
         }
 

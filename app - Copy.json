@@ -1,0 +1,12 @@
+{
+  "expo": {
+    "extra": {
+      "eas": {
+        "projectId": "5bcfb028-5c46-4700-b712-18728268dd3e"
+      }
+    },
+    "android": {
+      "package": "com.muzamil0786.chardhogo"
+    }
+  }
+}

@@ -1,0 +1,6 @@
+Testing login at http://127.0.0.1:4000/api/auth/login ...
+❌ Server Error Status: 400
+❌ Server Error Data: {
+  "success": false,
+  "message": "Invalid credentials"
+}

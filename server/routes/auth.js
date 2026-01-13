@@ -357,21 +357,28 @@ router.post('/login', authLimiter, async (req, res) => {
             return res.status(400).json({ success: false, message: 'Invalid credentials' });
         }
 
+        console.log('👤 User found:', { name: user.name, id: user._id, hasPassword: !!user.password });
+
         // Check if password matches (if user has one)
         let isMatch = false;
         if (user.password && user.password.trim() !== '') {
             console.log('🔑 Comparing passwords...');
-            isMatch = await bcrypt.compare(password, user.password);
+            try {
+                isMatch = await bcrypt.compare(password, user.password);
+                console.log('⚖️ Password match result:', isMatch);
+            } catch (err) {
+                console.error('❌ Error during bcrypt.compare:', err);
+            }
         } else {
             console.log('❌ User/Driver has no password set (OAuth account)');
         }
 
         if (!isMatch) {
-            console.log('❌ Password mismatch or no password set for:', email);
+            console.log('❌ Login failed for:', email);
             return res.status(400).json({ success: false, message: 'Invalid credentials' });
         }
 
-        console.log('✅ Password matched! Logging in as:', userType);
+        console.log('✅ Login successful for:', userType);
 
         // Generate Tokens with userType
         const payload = { id: user._id, userType };
@@ -418,12 +425,15 @@ router.post('/refresh-token', async (req, res) => {
     const refreshToken = req.cookies.refreshToken || req.body.refreshToken;
 
     if (!refreshToken) {
+        console.log('❌ Refresh Token Endpoint: No token provided (Body or Cookie)');
         return res.status(401).json({ success: false, message: 'Refresh Token required' });
     }
 
     try {
+        console.log('🔄 Refresh Token Endpoint: Verifying token...');
         // Verify token signature
         const decoded = jwt.verify(refreshToken, process.env.REFRESH_TOKEN_SECRET || process.env.JWT_SECRET + "_refresh");
+        console.log('✅ Refresh Token Endpoint: Token verified for ID:', decoded.id);
 
         // Find user in User collection first
         let user = await User.findById(decoded.id);

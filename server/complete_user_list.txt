@@ -1,0 +1,76 @@
+{
+  "users": [
+    {
+      "role": "user",
+      "_id": "69564aba70ac057d20ea8c30",
+      "email": "admin@chttrix.com",
+      "userType": "company",
+      "isOnline": false
+    },
+    {
+      "role": "user",
+      "_id": "69564aba70ac057d20ea8c38",
+      "email": "employee@chttrix.com",
+      "userType": "company",
+      "isOnline": false
+    },
+    {
+      "role": "user",
+      "_id": "69564abb70ac057d20ea8c3b",
+      "email": "jane@chttrix.com",
+      "userType": "company",
+      "isOnline": false
+    },
+    {
+      "role": "user",
+      "_id": "69564c3800e539ff0275d9b6",
+      "email": "shaikmuzzu600@gmail.com",
+      "userType": "personal",
+      "isOnline": false
+    },
+    {
+      "role": "user",
+      "_id": "69565927456557107452c026",
+      "email": "test1@gmail.com",
+      "userType": "personal",
+      "isOnline": true
+    },
+    {
+      "role": "user",
+      "_id": "69565ee2456557107452c2a1",
+      "email": "muzamilmohammadk@gmail.com",
+      "userType": "personal",
+      "isOnline": true
+    },
+    {
+      "role": "user",
+      "_id": "69565f28456557107452c2f6",
+      "email": "test3@gmail.com",
+      "userType": "personal",
+      "isOnline": true
+    },
+    {
+      "role": "user",
+      "_id": "69595b75ce877ccea420ecac",
+      "email": "msm60005@gmail.com",
+      "userType": "personal",
+      "isOnline": true
+    },
+    {
+      "_id": "695a10f59472a3f4966f51e1",
+      "name": "Mango",
+      "email": "mango@gmail.com",
+      "isOnline": false,
+      "role": "user",
+      "userType": "user"
+    },
+    {
+      "role": "user",
+      "_id": "695ea2481afca818b068671e",
+      "email": "preetham@mm.com",
+      "userType": "company",
+      "isOnline": true
+    }
+  ],
+  "drivers": []
+}
