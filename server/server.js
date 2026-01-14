@@ -1,6 +1,12 @@
 require('dotenv').config({ path: __dirname + '/.env' });
 const express = require('express');
 const mongoose = require('mongoose');
+const dns = require('dns');
+
+// Force Node.js to use Google DNS to resolve MongoDB SRV records
+// This bypasses local ISP DNS blocks/issues
+dns.setServers(['8.8.8.8', '8.8.4.4']);
+
 const cors = require('cors');
 const cookieParser = require('cookie-parser');
 const os = require('os');
@@ -59,13 +65,20 @@ app.use(xss());
 app.use('/api/', apiLimiter);
 
 // Connect to MongoDB
-mongoose.connect(process.env.MONGODB_URI) // Options are now default and can be removed
+const mongooseOptions = {
+    family: 4, // Force IPv4
+    serverSelectionTimeoutMS: 5000, // Timeout after 5 seconds instead of 30s
+};
+
+mongoose.connect(process.env.MONGODB_URI, mongooseOptions)
     .then(() => {
         console.log('✅ MongoDB connected successfully');
     })
     .catch(err => {
-        // Log a concise error message on initial failure
         console.error('❌ Initial MongoDB connection error:', err.message);
+        if (err.message.includes('ECONNREFUSED')) {
+            console.log('💡 TIP: This usually means your DNS is blocking the connection. Try changing your DNS to 8.8.8.8');
+        }
         console.log('⚠️ Server will continue running without database connection.');
     });
 
