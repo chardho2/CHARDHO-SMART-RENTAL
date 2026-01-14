@@ -1,0 +1,43 @@
+<svg width="200" height="200" viewBox="0 0 200 200" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- Background Circle with Gradient -->
+  <defs>
+    <linearGradient id="logoGradient" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" style="stop-color:#4FD1C5;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#38B2AC;stop-opacity:1" />
+    </linearGradient>
+    <linearGradient id="arrowGradient" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" style="stop-color:#FFFFFF;stop-opacity:1" />
+      <stop offset="100%" style="stop-color:#F0FDFA;stop-opacity:1" />
+    </linearGradient>
+  </defs>
+  
+  <!-- Main Circle Background -->
+  <circle cx="100" cy="100" r="95" fill="url(#logoGradient)"/>
+  
+  <!-- Stylized "C" Road Path -->
+  <path d="M 100 30 
+           C 140 30, 165 55, 165 95
+           C 165 135, 140 160, 100 160
+           C 70 160, 45 140, 40 110
+           L 60 105
+           C 63 125, 80 140, 100 140
+           C 128 140, 145 120, 145 95
+           C 145 70, 128 50, 100 50
+           L 100 30 Z" 
+        fill="url(#arrowGradient)" 
+        opacity="0.95"/>
+  
+  <!-- Forward Arrow/Speed Element -->
+  <path d="M 95 85 L 135 100 L 95 115 L 105 100 Z" 
+        fill="#FFFFFF" 
+        opacity="0.9"/>
+  
+  <!-- Inner Circle Detail -->
+  <circle cx="100" cy="100" r="25" fill="none" stroke="#FFFFFF" stroke-width="3" opacity="0.4"/>
+  
+  <!-- Plus Symbol for "GO+" -->
+  <g opacity="0.85">
+    <rect x="155" y="145" width="25" height="4" rx="2" fill="#FFFFFF"/>
+    <rect x="165.5" y="134.5" width="4" height="25" rx="2" fill="#FFFFFF"/>
+  </g>
+</svg>

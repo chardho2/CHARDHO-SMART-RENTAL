@@ -1,0 +1,9 @@
+﻿git : remote: Repository not found.
+At line:1 char:1
++ git push origin main 2>&1 | Out-File -Encoding utf8 push_result.txt
++ ~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (remote: Repository not found.:String) [],  
+   RemoteException
+    + FullyQualifiedErrorId : NativeCommandError
+ 
+fatal: repository 'https://github.com/MuzamilMohammadK/chardhogo-.git/' not found

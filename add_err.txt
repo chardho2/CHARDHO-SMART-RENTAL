@@ -1,0 +1,8 @@
+﻿git : fatal: Pathspec 'my-app/package.json' is in submodule 'my-app'
+At line:1 char:1
++ git add my-app/package.json 2>&1 | Out-File -Encoding utf8 add_err.tx ...
++ ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+    + CategoryInfo          : NotSpecified: (fatal: Pathspec...module 'my-app':String)  
+   [], RemoteException
+    + FullyQualifiedErrorId : NativeCommandError
+ 

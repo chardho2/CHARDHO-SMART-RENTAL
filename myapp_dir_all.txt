@@ -1,0 +1,37 @@
+﻿
+
+    Directory: C:\Users\MUZZU\Desktop\chardhogo\my-app
+
+
+Mode                 LastWriteTime         Length Name                                  
+----                 -------------         ------ ----                                  
+d-----        13-01-2026     19:55                .expo                                 
+d-----        11-01-2026     00:38                .vscode                               
+d-----        12-01-2026     01:34                app                                   
+d-----        11-01-2026     00:38                assets                                
+d-----        11-01-2026     00:39                components                            
+d-----        11-01-2026     00:38                constants                             
+d-----        11-01-2026     00:38                context                               
+d-----        11-01-2026     00:38                hooks                                 
+d-----        14-01-2026     19:24                node_modules                          
+d-----        12-01-2026     01:37                scripts                               
+d-----        11-01-2026     00:38                services                              
+d-----        11-01-2026     00:38                utils                                 
+-a---l        13-01-2026     16:38           2624 .env                                  
+-a---l        14-12-2025     23:08           3262 .env.example                          
+-a---l        14-12-2025     22:59            580 .gitignore                            
+-a---l        09-01-2026     16:39           2112 app.config.js                         
+-a---l        14-01-2026     19:23            201 babel.config.js                       
+-a---l        26-10-1985     13:45            237 eslint.config.js                      
+-a----        14-01-2026     19:32            110 expo-env.d.ts                         
+-a----        13-01-2026     17:55            211 expo_chk.txt                          
+-a---l        19-12-2025     00:22            949 expo_fix_output.txt                   
+-a----        13-01-2026     17:56           3257 expo_pkg.json                         
+-a---l        15-12-2025     00:50            229 metro.config.js                       
+-a----        14-01-2026     19:32         517528 package-lock.json                     
+-a----        14-01-2026     19:32           2236 package.json                          
+-a---l        17-12-2025     12:09           1489 start-expo.bat                        
+-a---l        13-01-2026     17:57            358 tsconfig.json                         
+-a---l        06-01-2026     12:50           1110 update_env_temp.js                    
+
+

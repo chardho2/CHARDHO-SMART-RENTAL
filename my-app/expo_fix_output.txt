@@ -1,0 +1,20 @@
+env: load .env
+env: export EXPO_PUBLIC_API_URL EXPO_PUBLIC_ENV EXPO_PUBLIC_ANDROID_CLIENT_ID EXPO_PUBLIC_IOS_CLIENT_ID EXPO_PUBLIC_WEB_CLIENT_ID EXPO_PUBLIC_GOOGLE_MAPS_API_KEY
+The following packages should be updated for best compatibility with the installed expo version:
+  expo@54.0.29 - expected version: ~54.0.30
+  expo-linking@8.0.10 - expected version: ~8.0.11
+  expo-router@6.0.19 - expected version: ~6.0.21
+  expo-splash-screen@31.0.12 - expected version: ~31.0.13
+Your project may not work correctly until you install the expected versions of the packages.
+ΓÇ║ Installing 4 SDK 54.0.0 compatible native modules using npm
+> npm install
+
+added 17 packages, changed 11 packages, and audited 1001 packages in 15s
+
+175 packages are looking for funding
+  run `npm fund` for details
+
+found 0 vulnerabilities
+ΓÇ║ Running npx expo install under the updated expo version
+> expo install --fix
+Dependencies are up to date
