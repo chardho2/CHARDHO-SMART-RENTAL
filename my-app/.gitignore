@@ -44,3 +44,7 @@ app-example
 # see DEVELOPMENT.md for more info
 /ios
 /android
+
+# Google Services (sensitive - do not commit)
+google-services/google-services.json
+google-services/GoogleService-Info.plist
