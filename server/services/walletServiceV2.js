@@ -1,7 +1,8 @@
 const Wallet = require('../models/Wallet');
 const WalletTransaction = require('../models/WalletTransaction');
 const Driver = require('../models/Driver');
-const phonePePayoutService = require('./phonePePayoutService');
+// phonePePayoutService removed
+
 const mongoose = require('mongoose');
 
 /**
@@ -490,22 +491,14 @@ const requestPayout = async (payoutData) => {
         }
 
         if (driver.bankDetails?.verificationStatus !== 'verified') {
-            throw new Error('Bank details not verified');
+            // Allow if benficiaryId exists (Razorpay setup)
+            if (!driver.bankDetails?.beneficiaryId) {
+                throw new Error('Bank details not verified');
+            }
         }
 
         // Generate payout ID
         const payoutId = `PAYOUT_${driverId}_${Date.now()}`;
-
-        // Initiate PhonePe payout
-        const payoutResult = await phonePePayoutService.initiatePayout({
-            driverId,
-            amount,
-            bankAccount: driver.bankDetails.accountNumber,
-            ifscCode: driver.bankDetails.ifscCode,
-            accountHolderName: driver.bankDetails.accountHolderName,
-            payoutId,
-            driverPhone: driver.phone
-        });
 
         // Create ledger entry (PENDING)
         const debitResult = await debitWallet({
@@ -519,14 +512,14 @@ const requestPayout = async (payoutData) => {
                 paymentMethod: 'BANK_TRANSFER',
                 payoutDetails: {
                     bankAccount: driver.bankDetails.accountNumber,
-                    ifscCode: driver.bankDetails.ifscCode,
-                    accountHolderName: driver.bankDetails.accountHolderName,
-                    gatewayTransactionId: payoutResult.gatewayTransactionId
+                    // If benficiaryId exists, it will be used by controller
+                    beneficiaryId: driver.bankDetails.beneficiaryId
                 }
             }
         });
 
-        // Update transaction status to PENDING (it was created as COMPLETED)
+        // Update transaction status to PENDING (it was created as COMPLETED by default in debitWallet logic, 
+        // effectively we want to debit immediately from 'available' but mark the transaction status as pending/processing)
         await WalletTransaction.findByIdAndUpdate(debitResult.transaction._id, {
             status: 'PENDING'
         });
@@ -537,8 +530,8 @@ const requestPayout = async (payoutData) => {
             payoutId,
             amount,
             status: 'PENDING',
-            gatewayTransactionId: payoutResult.gatewayTransactionId,
-            estimatedArrival: new Date(Date.now() + 24 * 60 * 60 * 1000) // 24 hours
+            wallet: debitResult.wallet, // Return updated wallet
+            transactionId: debitResult.transaction._id
         };
 
     } catch (error) {

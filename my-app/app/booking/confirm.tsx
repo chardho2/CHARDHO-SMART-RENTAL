@@ -13,7 +13,7 @@ import {
     Alert,
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
-import MapView, { Marker, Polyline, PROVIDER_GOOGLE } from "@/components/map/MapComponents";
+import MapView, { Marker, Polyline, PROVIDER_GOOGLE } from "../../components/map/MapComponents";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import BookingHeader from "../../components/booking/BookingHeader";
 import { bookingAPI } from "../../services/bookingAPI";

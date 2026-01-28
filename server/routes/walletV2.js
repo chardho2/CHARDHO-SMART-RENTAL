@@ -1,7 +1,8 @@
 const express = require('express');
 const router = express.Router();
 const walletServiceV2 = require('../services/walletServiceV2');
-const phonePePayoutService = require('../services/phonePePayoutService');
+// phonePePayoutService removed
+
 const { authenticateToken, requireDriver } = require('../middleware/auth');
 
 /**
@@ -169,106 +170,8 @@ router.get('/reconcile', authenticateToken, requireDriver, async (req, res) => {
 // PAYOUT WEBHOOK ENDPOINT
 // ========================================
 
-/**
- * POST /api/wallet/payout/callback
- * PhonePe payout webhook
- * 
- * Called by PhonePe when payout status changes
- */
-router.post('/payout/callback', async (req, res) => {
-    try {
-        const { response, checksum } = req.body;
+// Payout callback and status routes removed as PhonePe is removed
 
-        // Verify signature
-        const isValid = phonePePayoutService.verifyPayoutCallback(response, checksum);
-
-        if (!isValid) {
-            console.error('❌ Invalid payout webhook signature');
-            return res.status(400).json({
-                success: false,
-                message: 'Invalid signature'
-            });
-        }
-
-        // Decode payload
-        const payload = JSON.parse(Buffer.from(response, 'base64').toString());
-
-        console.log('📥 Payout Webhook Received:', payload);
-
-        // Extract details
-        const payoutId = payload.merchantTransactionId;
-        const status = payload.code === 'PAYMENT_SUCCESS' ? 'COMPLETED' : 'FAILED';
-        const metadata = {
-            utrNumber: payload.data?.utr,
-            gatewayTransactionId: payload.transactionId,
-            failureReason: payload.message,
-            processedAt: new Date()
-        };
-
-        // Update payout status
-        await walletServiceV2.updatePayoutStatus(payoutId, status, metadata);
-
-        res.json({
-            success: true,
-            message: 'Webhook processed'
-        });
-
-    } catch (error) {
-        console.error('❌ Payout Webhook Error:', error.message);
-        res.status(500).json({
-            success: false,
-            message: error.message
-        });
-    }
-});
-
-/**
- * GET /api/wallet/payout/status/:payoutId
- * Check payout status manually
- */
-router.get('/payout/status/:payoutId', authenticateToken, requireDriver, async (req, res) => {
-    try {
-        const { payoutId } = req.params;
-
-        const result = await phonePePayoutService.checkPayoutStatus(payoutId);
-
-        res.json({
-            success: true,
-            data: result
-        });
-    } catch (error) {
-        console.error('❌ Check Payout Status Error:', error.message);
-        res.status(500).json({
-            success: false,
-            message: error.message
-        });
-    }
-});
-
-// ========================================
-// ADMIN ENDPOINTS
-// ========================================
-
-/**
- * GET /api/wallet/admin/balance
- * Get PhonePe merchant account balance
- */
-router.get('/admin/balance', authenticateToken, async (req, res) => {
-    try {
-        const balance = await phonePePayoutService.getAccountBalance();
-
-        res.json({
-            success: true,
-            data: balance
-        });
-    } catch (error) {
-        console.error('❌ Get Account Balance Error:', error.message);
-        res.status(500).json({
-            success: false,
-            message: error.message
-        });
-    }
-});
 
 /**
  * POST /api/wallet/admin/reconcile-all

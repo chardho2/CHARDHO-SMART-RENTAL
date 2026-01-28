@@ -432,7 +432,7 @@ router.post('/estimate-rates', authenticateToken, async (req, res) => {
         };
 
         const rideTypes = [
-            { id: "bike", name: "Bike", icon: "two-wheeler", seats: 1 },
+            { id: "bike", name: "Bike", icon: "motorcycle", seats: 1 },
             { id: "auto", name: "Auto", icon: "local-taxi", seats: 3 },
             { id: "car", name: "Car", icon: "directions-car", seats: 4 },
             { id: "suv", name: "SUV", icon: "airport-shuttle", seats: 6 },
@@ -745,7 +745,7 @@ router.post('/create', authenticateToken, bookingLimiter, async (req, res) => {
             };
 
             emitNewBooking(bookingForSocket, [driverId]);
-            log('✅ Socket notification sent');
+            log(`✅ Socket notification sent to driver ${driverId}`);
 
             // NEW: Create persistent notification for URL history
             await NotificationService.notifyUser(io, req.user._id, {
@@ -759,7 +759,6 @@ router.post('/create', authenticateToken, bookingLimiter, async (req, res) => {
             });
 
             // Also notify driver persistently
-            // FIX: Removed redundant require causing TDZ error
             await NotificationService.notifyDriverRideRequest(io, driverId, {
                 bookingId: booking._id,
                 pickupAddress: booking.pickup.address,
@@ -770,6 +769,7 @@ router.post('/create', authenticateToken, bookingLimiter, async (req, res) => {
                 fare: booking.fare, // Pass full object too
                 distance: booking.fare.distance
             });
+            log(`✅ Persistent notification created for driver ${driverId}`);
 
         } catch (e) {
             log(`⚠️ Socket/Notification failed: ${e.message}`);
@@ -908,10 +908,12 @@ router.get('/:id', authenticateToken, async (req, res) => {
 // @access  Private (Driver)
 router.patch('/:id/accept', authenticateToken, async (req, res) => {
     try {
+        console.log(`👍 Accept booking requested: ${req.params.id} by driver ${req.user._id}`);
+
         // Generate 4-digit PIN
         const pin = Math.floor(1000 + Math.random() * 9000).toString();
 
-        // Atomic update
+        // Atomic update: Only update if status is 'pending'
         const booking = await Booking.findOneAndUpdate(
             { _id: req.params.id, status: 'pending' },
             {
@@ -926,43 +928,60 @@ router.patch('/:id/accept', authenticateToken, async (req, res) => {
         );
 
         if (!booking) {
+            // Check why it failed
             const existing = await Booking.findById(req.params.id);
             if (!existing) return res.status(404).json({ success: false, message: 'Booking not found' });
+
+            // IDEMPOTENCY CHECK: If already accepted by THIS driver, return success
+            if (existing.status === 'accepted' && existing.driver && existing.driver.toString() === req.user._id.toString()) {
+                console.log(`ℹ️ Booking ${req.params.id} already accepted by this driver. Returning success.`);
+                return res.json({ success: true, booking: existing, message: 'Ride already accepted' });
+            }
+
+            console.log(`⚠️ Conflict: Booking ${req.params.id} is ${existing.status} (Driver: ${existing.driver})`);
             return res.status(409).json({ success: false, message: 'Booking is already ' + existing.status });
         }
+
         // startTime is set when PIN is verified, not when accepted
         // booking.startTime = new Date(); 
 
-
+        console.log(`✅ Booking ${booking._id} accepted by ${req.user.name}`);
 
         // Notify user via socket and persistent notification
-        const { notifyUser } = require('../socket');
-        notifyUser(booking.user, 'booking:accepted', {
-            bookingId: booking._id,
-            driverId: req.user._id,
-            verificationPin: pin, // Send PIN to user immediately
-            driver: {
-                name: req.user.name,
-                phone: req.user.phone,
-                vehicle: req.user.vehicle?.model,
-                plate: req.user.vehicle?.plateNumber,
-                photo: req.user.profilePicture
-            },
-            message: 'Driver accepted your ride request'
-        });
+        try {
+            const { notifyUser } = require('../socket');
+            notifyUser(booking.user, 'booking:accepted', {
+                bookingId: booking._id,
+                driverId: req.user._id,
+                verificationPin: pin, // Send PIN to user immediately
+                driver: {
+                    name: req.user.name,
+                    phone: req.user.phone,
+                    vehicle: req.user.vehicle?.model,
+                    plate: req.user.vehicle?.plateNumber,
+                    photo: req.user.profilePicture
+                },
+                message: 'Driver accepted your ride request'
+            });
 
-        // Persistent Notification
-        const io = require('../socket').getIO();
-        const NotificationService = require('../services/notificationService');
-        await NotificationService.notifyRideStatus(io, booking.user.toString(), 'accepted', {
-            bookingId: booking._id,
-            driverName: req.user.name,
-            driverId: req.user._id,
-            verificationPin: pin
-        });
+            // Persistent Notification
+            const io = require('../socket').getIO();
+            const NotificationService = require('../services/notificationService');
+            await NotificationService.notifyRideStatus(io, booking.user.toString(), 'accepted', {
+                bookingId: booking._id,
+                driverName: req.user.name,
+                driverId: req.user._id,
+                verificationPin: pin
+            });
+        } catch (notifyError) {
+            console.error('Notification error in accept:', notifyError.message);
+        }
 
         res.json({ success: true, booking });
-    } catch (e) { res.status(500).json({ success: false, message: e.message }); }
+    } catch (e) {
+        console.error('Accept error:', e);
+        res.status(500).json({ success: false, message: e.message });
+    }
 });
 
 // @route   PATCH /api/booking/:id/reject
@@ -1221,7 +1240,7 @@ router.post('/:id/cancel', authenticateToken, async (req, res) => {
             try {
                 const io = require('../socket').getIO();
                 if (io) {
-                    io.to(`user_${booking.user}`).emit('booking:cancelled', {
+                    io.to(`user:${booking.user}`).emit('booking:cancelled', {
                         bookingId: booking._id,
                         message: 'Driver has cancelled the ride'
                     });
@@ -1300,53 +1319,12 @@ router.patch('/:id/complete', authenticateToken, async (req, res) => {
                 });
             }
 
-            // Verify payment with PhonePe
-            try {
-                const paymentStatus = await phonePeService.checkStatus(booking.payment.transactionId);
-
-                if (paymentStatus.code === 'PAYMENT_SUCCESS') {
-                    // Payment verified - update status and continue
-                    console.log(`✅ Payment verified successfully`);
-                    booking.payment.status = 'completed';
-                    booking.payment.details = paymentStatus.data;
-                    await booking.save();
-                } else if (paymentStatus.code === 'PAYMENT_PENDING') {
-                    // Payment still pending
-                    console.log(`⏳ Payment is still pending`);
-                    return res.status(400).json({
-                        success: false,
-                        verified: false,
-                        paymentStatus: 'pending',
-                        message: 'Payment is still processing. Please wait for confirmation.',
-                        suggestion: 'Wait for payment or ask user to pay via cash',
-                        action: 'WAIT_OR_SWITCH_TO_CASH',
-                        canComplete: false
-                    });
-                } else {
-                    // Payment failed or not completed
-                    console.log(`❌ Payment not completed: ${paymentStatus.code}`);
-                    return res.status(400).json({
-                        success: false,
-                        verified: false,
-                        paymentStatus: 'failed',
-                        message: 'User has not completed the payment',
-                        suggestion: 'Please ask the user to pay via cash instead',
-                        action: 'SWITCH_TO_CASH',
-                        canComplete: false
-                    });
-                }
-            } catch (verifyError) {
-                console.error(`❌ Payment verification failed:`, verifyError.message);
-                return res.status(400).json({
-                    success: false,
-                    verified: false,
-                    message: 'Unable to verify payment status',
-                    suggestion: 'Please ask the user to pay via cash instead',
-                    action: 'SWITCH_TO_CASH',
-                    canComplete: false,
-                    error: verifyError.message
-                });
+            // Online payment verification removed.
+            if (booking.payment.method !== 'cash' && booking.payment.status !== 'completed') {
+                console.log(`💳 Online payment (${booking.payment.method}) detected. Skipping automatic verification.`);
+                // You can manually mark as completed or wait for manual confirmation
             }
+
         }
 
         // 2. Update Booking
@@ -1574,4 +1552,126 @@ router.post('/:id/rate', authenticateToken, async (req, res) => {
     }
 });
 
+/**
+ * SWITCH PAYMENT METHOD TO CASH
+ * @route   POST /api/booking/:id/switch-to-cash
+ * @desc    Switch payment method from online to cash
+ */
+router.post('/:id/switch-to-cash', authenticateToken, async (req, res) => {
+    try {
+        const bookingId = req.params.id;
+        const booking = await Booking.findById(bookingId);
+
+        if (!booking) {
+            return res.status(404).json({ success: false, message: 'Booking not found' });
+        }
+
+        // Check if driver owns this booking
+        if (booking.driver.toString() !== req.user._id.toString()) {
+            return res.status(403).json({ success: false, message: 'Unauthorized' });
+        }
+
+        // Check if previously paid (double charge prevention)
+        if (booking.payment.status === 'completed' && booking.payment.method === 'cash') {
+            return res.json({ success: true, booking, message: 'Payment already collected' });
+        }
+
+        // Store old info
+        const oldMethod = booking.payment.method;
+
+        // Update to cash & completed
+        booking.payment = {
+            method: 'cash',
+            status: 'completed',
+            transactionId: null,
+            previousMethod: oldMethod,
+            switchedAt: new Date()
+        };
+
+        // Ensure booking status is completed if it wasn't
+        if (booking.status !== 'completed') {
+            booking.status = 'completed';
+            booking.endTime = new Date();
+        }
+
+        await booking.save();
+
+        // FINANCIAL RECONCILIATION
+        const payoutService = require('../services/payoutService');
+        const cashReconciliationService = require('../services/cashReconciliationService');
+
+        // Calculate earnings split (70/30)
+        const { commission, driverEarnings } = payoutService.calculateEarnings(booking.fare.total);
+
+        console.log('💵 Processing SWITCH-TO-CASH payment with reconciliation...');
+
+        // Process cash ride (Credit earnings check, Debit commission)
+        const walletResult = await cashReconciliationService.processCashRideWithDues({
+            driverId: booking.driver,
+            userId: booking.user,
+            bookingId: booking._id,
+            totalFare: booking.fare.total,
+            commission: commission,
+            driverEarning: driverEarnings
+        });
+
+        console.log(`✅ Cash ride processed | Commission: ${walletResult.commissionDeducted ? 'DEDUCTED' : 'PENDING'}`);
+
+        // Update Driver Stats
+        try {
+            await Driver.findByIdAndUpdate(req.user._id, {
+                $inc: {
+                    totalRides: 1,
+                    totalEarnings: driverEarnings
+                },
+                $set: { isOnline: true }
+            });
+        } catch (e) {
+            console.error('Failed to update driver stats', e);
+        }
+
+        // Notify user via socket
+        try {
+            const { getIO, notifyUser } = require('../socket');
+            const NotificationService = require('../services/notificationService');
+            const io = getIO();
+
+            if (io) {
+                // Specific event for payment method change
+                io.to(`user_${booking.user}`).emit('payment:method-changed', {
+                    bookingId: booking._id,
+                    newMethod: 'cash',
+                    oldMethod
+                });
+
+                // Also standard completion event
+                notifyUser(booking.user, 'booking:completed', {
+                    bookingId: booking._id,
+                    fare: booking.fare.total,
+                    message: 'Ride completed (Cash Payment)'
+                });
+            }
+
+            await NotificationService.notifyPayment(io, req.user._id, 'driver', {
+                success: true,
+                amount: driverEarnings,
+                bookingId: booking._id,
+                message: 'Cash payment collected (Commission deducted)'
+            });
+
+        } catch (socketError) {
+            console.log('⚠️ Socket notification failed');
+        }
+
+        res.json({ success: true, booking, message: 'Payment collected via Cash' });
+
+    } catch (error) {
+        console.error('❌ Switch to cash error:', error);
+        res.status(500).json({ success: false, message: error.message });
+    }
+});
+
+
+
 module.exports = router;
+

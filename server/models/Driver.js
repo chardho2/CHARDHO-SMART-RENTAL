@@ -70,6 +70,16 @@ const driverSchema = new mongoose.Schema({
             type: Number,
             default: null
         },
+        // GeoJSON for 2dsphere indexing
+        type: {
+            type: String,
+            enum: ['Point'],
+            default: 'Point'
+        },
+        coordinates: {
+            type: [Number], // [longitude, latitude]
+            default: [0, 0]
+        },
         lastUpdated: {
             type: Date,
             default: null
@@ -160,17 +170,6 @@ const driverSchema = new mongoose.Schema({
         }
     },
 
-    isVerified: {
-        type: Boolean,
-        default: false
-    },
-
-    kycStatus: {
-        type: String,
-        enum: ['pending', 'verified', 'rejected'],
-        default: 'pending'
-    },
-
     isActive: {
         type: Boolean,
         default: true
@@ -204,7 +203,17 @@ const driverSchema = new mongoose.Schema({
         name: { type: String, required: true },
         number: { type: String, required: true },
         relation: { type: String, required: true }
-    }]
+    }],
+
+    // Native Razorpay QR Details
+    razorpayQrId: {
+        type: String,
+        default: null
+    },
+    razorpayQrImageUrl: {
+        type: String,
+        default: null
+    }
 }, {
     timestamps: true
 });

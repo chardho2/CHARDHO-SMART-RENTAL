@@ -84,17 +84,25 @@ export default function DriverProfile() {
         setRefreshing(false);
     }, []);
 
-    const handleLogout = async () => {
-        console.log('🔘 Logout button direct press (Driver Profile)');
-        try {
-            console.log('🏃 Starting driver logout process...');
-            await logout();
-            console.log('✅ Local driver logout done, redirecting...');
-            router.replace("/login" as any);
-        } catch (err) {
-            console.error('Driver logout UI error:', err);
-            router.replace("/login" as any);
-        }
+    const handleLogout = () => {
+        Alert.alert("Logout", "Are you sure you want to logout?", [
+            { text: "Cancel", style: "cancel" },
+            {
+                text: "Logout",
+                style: "destructive",
+                onPress: async () => {
+                    try {
+                        await logout();
+                        // Redirect to root/login
+                        router.replace("/login" as any);
+                    } catch (err) {
+                        console.error("Logout failed:", err);
+                        // Fallback redirect
+                        router.replace("/login" as any);
+                    }
+                },
+            },
+        ]);
     };
 
     if (loading) {

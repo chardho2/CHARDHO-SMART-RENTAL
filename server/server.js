@@ -1,4 +1,6 @@
 require('dotenv').config({ path: __dirname + '/.env' });
+
+
 const express = require('express');
 const mongoose = require('mongoose');
 const dns = require('dns');
@@ -10,6 +12,7 @@ dns.setServers(['8.8.8.8', '8.8.4.4']);
 const cors = require('cors');
 const cookieParser = require('cookie-parser');
 const os = require('os');
+const path = require('path');
 
 const app = express();
 const PORT = process.env.PORT || 4000;
@@ -38,12 +41,16 @@ app.use(cors({
         }
     },
     credentials: true, // Enable credentials (cookies, authorization headers)
-    methods: ['GET', 'POST', 'PUT', 'DELETE'],
+    methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH'],
     allowedHeaders: ['Content-Type', 'Authorization']
 }));
 
 app.use(cookieParser()); // Parse cookies
-app.use(express.json());
+app.use(express.json({
+    verify: (req, res, buf) => {
+        req.rawBody = buf;
+    }
+}));
 app.use(express.urlencoded({ extended: true }));
 
 // Security middleware
@@ -51,6 +58,9 @@ const helmet = require('helmet');
 const mongoSanitize = require('express-mongo-sanitize');
 const xss = require('xss-clean');
 const { apiLimiter } = require('./middleware/rateLimiter');
+
+// Serve static files (For Razorpay Compliance Website)
+app.use(express.static(path.join(__dirname, 'public')));
 
 // Set security HTTP headers
 app.use(helmet());
@@ -70,17 +80,21 @@ const mongooseOptions = {
     serverSelectionTimeoutMS: 5000, // Timeout after 5 seconds instead of 30s
 };
 
-mongoose.connect(process.env.MONGODB_URI, mongooseOptions)
-    .then(() => {
-        console.log('✅ MongoDB connected successfully');
-    })
-    .catch(err => {
-        console.error('❌ Initial MongoDB connection error:', err.message);
-        if (err.message.includes('ECONNREFUSED')) {
-            console.log('💡 TIP: This usually means your DNS is blocking the connection. Try changing your DNS to 8.8.8.8');
-        }
-        console.log('⚠️ Server will continue running without database connection.');
-    });
+if (!process.env.MONGODB_URI) {
+    console.error('❌ MONGODB_URI is not defined in .env file');
+} else {
+    mongoose.connect(process.env.MONGODB_URI, mongooseOptions)
+        .then(() => {
+            console.log('✅ MongoDB connected successfully to Cluster');
+        })
+        .catch(err => {
+            console.error('❌ Initial MongoDB connection error:', err.message);
+            if (err.message.includes('ECONNREFUSED')) {
+                console.log('💡 TIP: This usually means your DNS is blocking the connection. Try changing your DNS to 8.8.8.8');
+            }
+            console.log('⚠️ Server will continue running without database connection.');
+        });
+}
 
 // MongoDB connection event handlers
 const db = mongoose.connection;
@@ -93,31 +107,16 @@ db.on('disconnected', () => {
 db.on('error', (err) => {
     console.error('❌ MongoDB runtime error:', err);
 });
-// Basic route
+// Basic route - Serve landing page for Razorpay compliance
 app.get('/', (req, res) => {
+    res.sendFile(path.join(__dirname, 'public', 'index.html'));
+});
+
+// JSON API Status (available at /api/status)
+app.get('/api/status', (req, res) => {
     res.json({
         message: 'Welcome to the Chardhogo Backend API',
-        status: 'running',
-        endpoints: {
-            auth: {
-                register: 'POST /api/auth/register',
-                login: 'POST /api/auth/login',
-                googleLogin: 'POST /api/auth/google',
-                getUser: 'GET /api/auth/user/:id'
-            },
-            user: {
-                profile: 'GET /api/user/profile (Protected)',
-                updateProfile: 'PUT /api/user/profile (Protected)',
-                rideHistory: 'GET /api/user/rides/history (Protected)',
-                deleteAccount: 'DELETE /api/user/account (Protected)'
-            },
-            driver: {
-                profile: 'GET /api/driver/profile (Protected)',
-                updateProfile: 'PUT /api/driver/profile (Protected)',
-                rideHistory: 'GET /api/driver/rides/history (Protected)',
-                stats: 'GET /api/driver/stats (Protected)'
-            }
-        }
+        status: 'running'
     });
 });
 
@@ -149,17 +148,13 @@ app.use('/api/debug', debugRoutes);
 const notificationRoutes = require('./routes/notifications');
 app.use('/api/notifications', notificationRoutes);
 
-// Payment routes (PhonePe)
-const paymentRoutes = require('./routes/payment');
-app.use('/api/payment', paymentRoutes);
+// Payment routes
+app.use('/api/payment', require('./routes/payment'));
 
 // Wallet routes (V2 - Real-time wallet system)
 const walletV2Routes = require('./routes/walletV2');
 app.use('/api/wallet', walletV2Routes);
 
-// Payment verification routes (Driver verification before ride completion)
-const paymentVerificationRoutes = require('./routes/paymentVerification');
-app.use('/api/payment', paymentVerificationRoutes);
 
 // 404 handler
 app.use((req, res) => {

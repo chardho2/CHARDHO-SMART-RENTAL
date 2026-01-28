@@ -12,6 +12,12 @@ const statusListeners: StatusCallback[] = [];
 
 // Helper to get socket URL
 const getSocketURL = () => {
+    // FIX: Check for HTTPS to prevent Mixed Content errors
+    // Check for HTTPS to prevent Mixed Content errors
+    if (typeof window !== 'undefined' && window.location && window.location.protocol === 'https:') {
+        console.warn("⚠️ Warning: Running on HTTPS but backend might be HTTP. Mixed Content errors may occur.");
+    }
+
     const baseURL = getBaseUrl();
     // Remove '/api' from the end if it exists, otherwise use base
     return baseURL.endsWith('/api') ? baseURL.slice(0, -4) : baseURL;

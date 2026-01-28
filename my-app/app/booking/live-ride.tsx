@@ -15,7 +15,7 @@ import {
 } from "react-native";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { LinearGradient } from "expo-linear-gradient";
-import MapView, { Marker, Polyline, PROVIDER_GOOGLE } from "@/components/map/MapComponents";
+import MapView, { Marker, Polyline, PROVIDER_GOOGLE } from "../../components/map/MapComponents";
 import * as Location from "expo-location";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import BookingHeader from "../../components/booking/BookingHeader";

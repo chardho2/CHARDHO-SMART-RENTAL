@@ -14,7 +14,7 @@ import { Ionicons } from "@expo/vector-icons";
 import { StatusBar } from "expo-status-bar";
 import { SafeAreaView } from "react-native-safe-area-context";
 
-import GoogleButton from "../../components/common/GoogleButton";
+
 import { authAPI } from "../../services/api";
 import { storageService } from "../../services/storage";
 import { useAuth } from "../../context/AuthContext";
@@ -239,13 +239,7 @@ export default function DriverSignup() {
                             style={styles.signupButton}
                         />
 
-                        <View style={styles.divider}>
-                            <View style={styles.line} />
-                            <Text style={styles.dividerText}>or continue with</Text>
-                            <View style={styles.line} />
-                        </View>
 
-                        <GoogleButton userType="driver" />
 
                         <View style={styles.footer}>
                             <Text style={styles.footerText}>Already have an account? </Text>

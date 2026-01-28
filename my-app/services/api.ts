@@ -276,25 +276,7 @@ export const authAPI = {
         }
     },
 
-    // Google Login
-    googleLogin: async (token: string, userType: 'user' | 'driver' = 'user'): Promise<ApiResponse> => {
-        try {
-            const { deviceId, deviceName } = await authAPI.getDeviceInfo();
-            const response = await api.post('/auth/google', { token, userType, deviceId, deviceName });
 
-            if (response.data.refreshToken) {
-                await storageService.saveRefreshToken(response.data.refreshToken);
-            }
-            if (response.data.token) {
-                await storageService.saveToken(response.data.token);
-            }
-
-            return response.data;
-        } catch (error: any) {
-            handleApiError(error);
-            throw error;
-        }
-    },
 
     // Logout
     logout: async (): Promise<ApiResponse> => {

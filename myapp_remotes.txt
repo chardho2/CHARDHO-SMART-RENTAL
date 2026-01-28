@@ -1,2 +1,0 @@
-﻿origin	https://github.com/MuzamilMohammadK/chardhogo-.git (fetch)
-origin	https://github.com/MuzamilMohammadK/chardhogo-.git (push)

@@ -60,7 +60,7 @@ class NotificationService {
                 type: 'ride_accepted',
                 category: 'ride',
                 priority: 'high',
-                actionUrl: '/(tabs)/booking/live-ride'
+                actionUrl: '/booking/live-ride'
             },
             arrived: {
                 title: '📍 Driver Arrived',
@@ -68,7 +68,7 @@ class NotificationService {
                 type: 'info',
                 category: 'ride',
                 priority: 'high',
-                actionUrl: '/(tabs)/booking/live-ride'
+                actionUrl: '/booking/live-ride'
             },
             started: {
                 title: '🏁 Ride Started',
@@ -76,7 +76,7 @@ class NotificationService {
                 type: 'ride_started',
                 category: 'ride',
                 priority: 'high',
-                actionUrl: '/(tabs)/booking/live-ride'
+                actionUrl: '/booking/live-ride'
             },
             completed: {
                 title: '✅ Ride Completed',
@@ -84,7 +84,7 @@ class NotificationService {
                 type: 'ride_completed',
                 category: 'ride',
                 priority: 'medium',
-                actionUrl: '/(tabs)/trips'
+                actionUrl: '/trips'
             },
             cancelled: {
                 title: '❌ Ride Cancelled',
@@ -92,7 +92,7 @@ class NotificationService {
                 type: 'ride_cancelled',
                 category: 'ride',
                 priority: 'high',
-                actionUrl: '/(tabs)/booking'
+                actionUrl: '/booking'
             }
         };
 
@@ -114,7 +114,7 @@ class NotificationService {
                 type: 'ride_cancelled',
                 category: 'ride',
                 priority: 'high',
-                actionUrl: '/(driver)/tabs/dashboard'
+                actionUrl: '/driver/tabs/dashboard'
             }
         };
 
@@ -144,7 +144,7 @@ class NotificationService {
             type: 'ride_request',
             category: 'ride',
             priority: 'urgent',
-            actionUrl: `/(driver)/trip-request?bookingId=${rideDetails.bookingId}`,
+            actionUrl: `/driver/trip-request?bookingId=${rideDetails.bookingId}`,
             metadata: rideDetails
         };
 
@@ -169,14 +169,14 @@ class NotificationService {
             if (paymentDetails.success) {
                 notificationData.title = '💵 Earnings Added';
                 notificationData.message = `You earned ₹${paymentDetails.amount} for this trip.`;
-                notificationData.actionUrl = '/(driver)/tabs/earnings';
+                notificationData.actionUrl = '/driver/tabs/earnings';
             }
         } else {
             // User specific override
             if (paymentDetails.success) {
                 notificationData.title = '💰 Payment Successful';
                 notificationData.message = `₹${paymentDetails.amount} paid for your ride.`;
-                notificationData.actionUrl = '/(tabs)/account/wallet';
+                notificationData.actionUrl = '/account/wallet';
             }
         }
 
@@ -199,7 +199,7 @@ class NotificationService {
             type: verified ? 'document_verified' : 'document_rejected',
             category: 'account',
             priority: 'high',
-            actionUrl: '/(driver)/documents',
+            actionUrl: '/driver/documents',
             metadata: { documentType, verified }
         };
 

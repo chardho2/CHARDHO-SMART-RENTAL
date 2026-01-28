@@ -39,16 +39,16 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     useEffect(() => {
         if (!isLoading && !user) {
             console.log('🛰️ No user session detected, enforcing redirect to login...');
-            // Need a slight timeout to ensure router is ready
-            const timer = setTimeout(() => {
-                const { router } = require('expo-router');
-                try {
-                    router.replace('/login');
-                } catch (err) {
-                    console.log('Navigation redirect failed (likely router not ready)');
-                }
-            }, 500);
-            return () => clearTimeout(timer);
+
+            // Re-evaluate if we need a redirect
+            const { router } = require('expo-router');
+            try {
+                // Check if we are already on a login/root page to prevent loops
+                // router.replace usually handles this anyway
+                router.replace('/login');
+            } catch (err) {
+                console.log('Static router.replace failed, component might not be mounted yet');
+            }
         }
     }, [user, isLoading]);
 
@@ -76,17 +76,26 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     const logout = useCallback(async () => {
         try {
             setIsLoading(true);
-            await authAPI.logout();
-        } catch (error) {
-            console.error("Logout API error:", error);
-            // Still proceed with local logout
-        } finally {
+
+            // 1. Clear local storage FIRST for instant UI response
+            await storageService.removeUser();
+
+            // 2. Disconnect socket
             try {
                 socketService.disconnect();
             } catch (err) {
                 console.error("Socket disconnect error:", err);
             }
+
+            // 3. Clear user state
             setUser(null);
+
+            // 4. Try to inform backend (non-blocking)
+            authAPI.logout().catch(e => console.log('Backend logout non-critical error:', e));
+
+        } catch (error) {
+            console.error("Logout process error:", error);
+        } finally {
             setIsLoading(false);
         }
     }, []);

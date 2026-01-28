@@ -7,6 +7,7 @@ import { View, StyleSheet } from 'react-native';
 import * as SplashScreen from 'expo-splash-screen';
 import { useEffect, useState, useCallback } from 'react';
 
+
 // Keep the splash screen visible while we fetch resources
 SplashScreen.preventAutoHideAsync();
 
@@ -16,6 +17,8 @@ export default function RootLayout() {
   useEffect(() => {
     async function prepare() {
       try {
+
+
         // Just enough time to let the splash screen show
         await new Promise(resolve => setTimeout(resolve, 500));
       } catch (e) {

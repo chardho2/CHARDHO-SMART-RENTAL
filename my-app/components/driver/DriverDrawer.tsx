@@ -1,7 +1,7 @@
 import { MaterialCommunityIcons, MaterialIcons } from "@expo/vector-icons";
 import { router } from "expo-router";
 import React, { useEffect, useState } from "react";
-import { StyleSheet, Switch, Text, TouchableOpacity, View, Image } from "react-native";
+import { StyleSheet, Switch, Text, TouchableOpacity, View, Image, Alert } from "react-native";
 import driverAPI, { DriverProfile } from "../../services/driverAPI";
 import { useDriverApp } from "../../context/DriverAppContext";
 import { useAuth } from "../../context/AuthContext";
@@ -34,6 +34,20 @@ export default function DriverDrawer() {
         subText: { color: colors.subText },
         menuItem: { backgroundColor: darkMode ? '#1E1E1E' : '#fff' }, // Optional: separate background for items
         iconColor: darkMode ? '#ccc' : '#8b6f46'
+    };
+
+    const handleLogout = () => {
+        Alert.alert("Logout", "Are you sure you want to logout?", [
+            { text: "Cancel", style: "cancel" },
+            {
+                text: "Logout",
+                style: "destructive",
+                onPress: async () => {
+                    await logout();
+                    router.replace("/login");
+                },
+            },
+        ]);
     };
 
     return (
@@ -80,7 +94,7 @@ export default function DriverDrawer() {
                 <Text style={[styles.menuText, dynamicStyles.text]}>Wallet</Text>
             </TouchableOpacity>
 
-            <TouchableOpacity style={styles.bottomBtn} onPress={logout}>
+            <TouchableOpacity style={styles.bottomBtn} onPress={handleLogout}>
                 <MaterialIcons name="logout" size={20} color={dynamicStyles.iconColor} />
                 <Text style={[styles.menuText, dynamicStyles.text, { marginLeft: 8 }]}>Logout</Text>
             </TouchableOpacity>

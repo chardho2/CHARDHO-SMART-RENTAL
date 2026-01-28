@@ -22,7 +22,7 @@ import LocationSearchModal from "../../components/booking/LocationSearchModal";
 import { bookingAPI, LocationData, DriverInfo } from "../../services/bookingAPI";
 import { useAuth } from "../../context/AuthContext";
 import { notificationService } from "../../services/notificationService";
-import MapView, { Marker, Polyline, PROVIDER_GOOGLE } from "@/components/map/MapComponents";
+import MapView, { Marker, Polyline, PROVIDER_GOOGLE } from "../../components/map/MapComponents";
 import { isDesktop } from "../../utils/responsive";
 import { useSettings } from "../../context/SettingsContext";
 

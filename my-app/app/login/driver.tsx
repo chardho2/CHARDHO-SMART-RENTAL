@@ -14,7 +14,7 @@ import { Ionicons } from "@expo/vector-icons";
 import { StatusBar } from "expo-status-bar";
 import { SafeAreaView } from "react-native-safe-area-context";
 
-import GoogleButton from "../../components/common/GoogleButton";
+
 import { authAPI } from "../../services/api";
 import { storageService } from "../../services/storage";
 import { useAuth } from "../../context/AuthContext";
@@ -80,19 +80,9 @@ export default function DriverLogin() {
                 }
             }
         } catch (error: any) {
-            // Check if this is an OAuth account
-            if (error?.isOAuthAccount) {
-                console.log("OAuth account login attempt handled:", error.message);
-                Alert.alert(
-                    "Google Account Detected",
-                    "This account was created with Google Sign-In. Please use the 'Continue with Google' button below to log in.",
-                    [{ text: "OK", style: "default" }]
-                );
-            } else {
-                console.error("Login error:", error);
-                const msg = error?.message || "Login failed. Please check your credentials.";
-                Alert.alert("Login Failed", msg);
-            }
+            console.error("Login error:", error);
+            const msg = error?.message || error?.error || "Login failed. Please check your credentials.";
+            Alert.alert("Login Failed", typeof msg === 'string' ? msg : JSON.stringify(msg));
         } finally {
             setLoading(false);
         }
@@ -169,13 +159,7 @@ export default function DriverLogin() {
                             style={styles.loginButton}
                         />
 
-                        <View style={styles.divider}>
-                            <View style={styles.line} />
-                            <Text style={styles.dividerText}>or continue with</Text>
-                            <View style={styles.line} />
-                        </View>
 
-                        <GoogleButton userType="driver" />
 
                         <View style={styles.footer}>
                             <Text style={styles.footerText}>New to Chardho? </Text>

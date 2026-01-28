@@ -146,7 +146,8 @@ const walletTransactionSchema = new mongoose.Schema({
         // Payment method
         paymentMethod: {
             type: String,
-            enum: ['CASH', 'UPI', 'CARD', 'WALLET', 'BANK_TRANSFER', 'PHONEPE', 'RAZORPAY']
+            enum: ['CASH', 'UPI', 'CARD', 'WALLET', 'BANK_TRANSFER', 'RAZORPAY']
+
         },
 
         // For ride payments

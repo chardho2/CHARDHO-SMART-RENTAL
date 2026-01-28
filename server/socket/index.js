@@ -63,7 +63,8 @@ const emitNewBooking = (booking, nearbyDriverIds) => {
 
     console.log(`📢 Emitting new booking ${booking._id} to ${nearbyDriverIds.length} drivers`);
 
-    nearbyDriverIds.forEach(driverId => {
+    nearbyDriverIds.forEach(driverIdRaw => {
+        const driverId = driverIdRaw.toString();
         const roomName = `driver:${driverId}`;
 
         // Check if driver is connected
@@ -129,22 +130,24 @@ const emitNewBooking = (booking, nearbyDriverIds) => {
 };
 
 // Notify user about booking status
-const notifyUser = (userId, event, data) => {
+const notifyUser = (userIdRaw, event, data) => {
     if (!io) {
         console.error('Socket.io not initialized');
         return;
     }
 
+    const userId = userIdRaw.toString();
     io.to(`user:${userId}`).emit(event, data);
 };
 
 // Notify driver about booking status
-const notifyDriver = (driverId, event, data) => {
+const notifyDriver = (driverIdRaw, event, data) => {
     if (!io) {
         console.error('Socket.io not initialized');
         return;
     }
 
+    const driverId = driverIdRaw.toString();
     io.to(`driver:${driverId}`).emit(event, data);
 };
 

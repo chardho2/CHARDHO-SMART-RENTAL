@@ -189,10 +189,10 @@ const styles = StyleSheet.create({
         alignItems: "center",
         backgroundColor: "#fff",
         padding: 24,
-        paddingTop: 40, // Reduced from 80
+        paddingTop: 80, // Reduced from 80
     },
     animationContainer: {
-        marginBottom: 20, // Reduced from 40
+        marginBottom: 60, // Reduced from 40
         position: 'relative',
         justifyContent: 'center',
         alignItems: 'center',

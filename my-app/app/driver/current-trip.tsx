@@ -4,7 +4,7 @@ import AsyncStorage from "@react-native-async-storage/async-storage";
 import { router, useLocalSearchParams } from "expo-router";
 import { Ionicons } from "@expo/vector-icons";
 import { LinearGradient } from "expo-linear-gradient";
-import MapView, { Marker, Polyline } from "@/components/map/MapComponents";
+import MapView, { Marker, Polyline } from "../../components/map/MapComponents";
 import * as Location from "expo-location";
 import { bookingAPI } from "../../services/bookingAPI";
 import LoadingSpinner from "../../components/common/LoadingSpinner";
@@ -82,7 +82,11 @@ export default function CurrentTrip() {
     return () => {
       socket?.off('booking:cancelled');
       if (locationSubscription.current) {
-        locationSubscription.current.remove();
+        try {
+          locationSubscription.current.remove();
+        } catch (e) {
+          console.log("Error removing location subscription:", e);
+        }
       }
     };
   }, [bookingId]);

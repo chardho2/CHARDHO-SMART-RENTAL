@@ -44,7 +44,8 @@ const paymentSchema = new mongoose.Schema({
 
     gatewayName: {
         type: String,
-        enum: ['razorpay', 'paytm', 'phonepe', 'googlepay', 'none'],
+        enum: ['razorpay', 'paytm', 'googlepay', 'none'],
+
         default: 'none'
     },
 
