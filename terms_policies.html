@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Terms & Policies | Chardho</title>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Inter:wght@400;500;600&display=swap"
+        rel="stylesheet">
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        :root {
+            --primary: #f82b2b;
+            --bg: #030712;
+            --glass: rgba(17, 24, 39, 0.7);
+            --border: rgba(255, 255, 255, 0.08);
+            --muted: #9ca3af;
+        }
+
+        body {
+            background-color: var(--bg);
+            color: #fff;
+            font-family: 'Inter', sans-serif;
+            margin: 0;
+            padding: 0;
+            line-height: 1.6;
+            background-image:
+                radial-gradient(circle at 10% 20%, rgba(248, 43, 43, 0.05) 0%, transparent 40%),
+                radial-gradient(circle at 90% 80%, rgba(59, 130, 246, 0.03) 0%, transparent 40%);
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 80px 20px;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 60px;
+        }
+
+        h1 {
+            font-family: 'Outfit';
+            font-size: 3rem;
+            font-weight: 800;
+            margin-bottom: 10px;
+            background: linear-gradient(135deg, #fff 0%, #f82b2b 100%);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .policy-card {
+            background: var(--glass);
+            backdrop-filter: blur(16px);
+            border: 1px solid var(--border);
+            border-radius: 24px;
+            padding: 40px;
+            margin-bottom: 30px;
+        }
+
+        h2 {
+            font-family: 'Outfit';
+            color: var(--primary);
+            font-size: 1.8rem;
+            margin-top: 0;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        h3 {
+            font-family: 'Outfit';
+            color: #fff;
+            font-size: 1.2rem;
+            margin-top: 25px;
+        }
+
+        p,
+        li {
+            color: var(--muted);
+            font-size: 1rem;
+        }
+
+        .update-badge {
+            display: inline-block;
+            padding: 4px 12px;
+            background: rgba(248, 43, 43, 0.1);
+            color: var(--primary);
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 700;
+            margin-bottom: 20px;
+        }
+
+        nav {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            background: rgba(3, 7, 18, 0.8);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid var(--border);
+            padding: 15px 0;
+            z-index: 1000;
+        }
+
+        .nav-content {
+            max-width: 1000px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 0 20px;
+        }
+
+        .logo {
+            font-family: 'Outfit';
+            font-weight: 800;
+            font-size: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            text-decoration: none;
+            color: #fff;
+        }
+
+        .back-link {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            color: var(--muted);
+            text-decoration: none;
+            font-size: 0.9rem;
+            transition: 0.3s;
+        }
+
+        .back-link:hover {
+            color: var(--primary);
+        }
+    </style>
+</head>
+
+<body>
+    <nav>
+        <div class="nav-content">
+            <a href="portals.html" class="logo">
+                <i data-lucide="zap" color="#f82b2b"></i> CHAR<span>DHO</span>
+            </a>
+            <a href="portals.html" class="back-link">
+                <i data-lucide="arrow-left" size="18"></i> Back to Portals
+            </a>
+        </div>
+    </nav>
+
+    <div class="container">
+        <div class="header">
+            <span class="update-badge">Last Updated: February 27, 2026</span>
+            <h1>Terms & Policies</h1>
+            <p>Transparency and trust are at the heart of our premium mobility service.</p>
+        </div>
+
+        <section class="policy-card">
+            <h2><i data-lucide="file-text"></i> Term of Service</h2>
+            <p>Welcome to Chardho. By using our application and services, you agree to the following conditions.</p>
+
+            <h3>1. Eligibility</h3>
+            <p>Users must be at least 18 years of age and possess a valid government-issued driver's license to rent a
+                vehicle. Drivers must undergo our comprehensive verification process.</p>
+
+            <h3>2. Vehicle Usage</h3>
+            <ul>
+                <li>Vehicles must be used only within the agreed geographical boundaries.</li>
+                <li>Smoking, pet transport (unless specified), and illegal activities are strictly prohibited.</li>
+                <li>Off-roading is not permitted with luxury sedan models.</li>
+            </ul>
+
+            <h3>3. Booking & Cancellations</h3>
+            <p>Full refund is available for cancellations made 24 hours prior to the trip start time. Within 24 hours, a
+                20% convenience fee will be applicable.</p>
+        </section>
+
+        <section class="policy-card">
+            <h2><i data-lucide="shield-check"></i> Privacy Policy</h2>
+            <p>Your data security is our top priority. We use industry-standard encryption to protect your sensitive
+                information.</p>
+
+            <h3>Data Collection</h3>
+            <p>We collect location data during active trips to ensure safety and provide roadside assistance. Personal
+                identity documents are stored in secure, encrypted vaults.</p>
+
+            <h3>Third-Party Sharing</h3>
+            <p>We do not sell your personal data. Information is shared only with insurance partners and regulatory
+                authorities when legally required.</p>
+        </section>
+
+        <section class="policy-card">
+            <h2><i data-lucide="help-circle"></i> Service Level Agreement</h2>
+            <p>We guarantee 99.9% uptime for our driver and admin portals. Customer support is available 24/7 for active
+                trips.</p>
+        </section>
+    </div>
+
+    <script>
+        lucide.createIcons();
+    </script>
+</body>
+
+</html>

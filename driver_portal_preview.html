@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chardho Driver | Mobile Portal</title>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Inter:wght@400;500;600&display=swap"
+        rel="stylesheet">
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        :root {
+            --primary: #f82b2b;
+            --bg: #030712;
+            --glass: rgba(17, 24, 39, 0.7);
+            --border: rgba(255, 255, 255, 0.08);
+            --muted: #9ca3af;
+        }
+
+        body {
+            background-color: var(--bg);
+            color: #fff;
+            font-family: 'Inter', sans-serif;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            background: radial-gradient(circle at top, rgba(248, 43, 43, 0.05), transparent);
+        }
+
+        .phone-mockup {
+            width: 375px;
+            height: 812px;
+            background: #000;
+            border: 8px solid #1f2937;
+            border-radius: 40px;
+            margin: 40px auto;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 50px 100px rgba(0, 0, 0, 0.8);
+        }
+
+        .screen {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            overflow-y: auto;
+            scrollbar-width: none;
+        }
+
+        .screen::-webkit-scrollbar {
+            display: none;
+        }
+
+        .header {
+            padding: 40px 20px 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: linear-gradient(to bottom, rgba(0, 0, 0, 0.8), transparent);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .profile-section {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+
+        .avatar {
+            width: 45px;
+            height: 45px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, var(--primary), #ef4444);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 800;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+            padding: 20px;
+        }
+
+        .stat-card {
+            background: var(--glass);
+            border: 1px solid var(--border);
+            border-radius: 20px;
+            padding: 15px;
+            text-align: center;
+        }
+
+        .stat-card h4 {
+            font-family: 'Outfit';
+            font-size: 1.5rem;
+            margin: 0;
+            color: var(--primary);
+        }
+
+        .stat-card p {
+            font-size: 0.7rem;
+            color: var(--muted);
+            margin: 5px 0 0;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .trip-card {
+            background: var(--glass);
+            border-left: 4px solid var(--primary);
+            margin: 0 20px 20px;
+            padding: 20px;
+            border-radius: 12px;
+            position: relative;
+        }
+
+        .trip-status {
+            font-size: 0.7rem;
+            background: rgba(248, 43, 43, 0.1);
+            color: var(--primary);
+            padding: 4px 10px;
+            border-radius: 20px;
+            font-weight: 800;
+            position: absolute;
+            top: 20px;
+            right: 20px;
+        }
+
+        .trip-title {
+            font-family: 'Outfit';
+            font-weight: 700;
+            margin-bottom: 10px;
+        }
+
+        .trip-detail {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            color: var(--muted);
+            font-size: 0.85rem;
+            margin-bottom: 5px;
+        }
+
+        .tabs {
+            position: absolute;
+            bottom: 0;
+            width: 100%;
+            height: 80px;
+            background: rgba(17, 24, 39, 0.95);
+            backdrop-filter: blur(20px);
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            border-top: 1px solid var(--border);
+        }
+
+        .tab-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 5px;
+            color: var(--muted);
+            font-size: 0.65rem;
+            cursor: pointer;
+        }
+
+        .tab-item.active {
+            color: var(--primary);
+        }
+
+        .online-toggle {
+            background: rgba(34, 197, 94, 0.1);
+            color: #22c55e;
+            padding: 10px 25px;
+            border-radius: 30px;
+            font-weight: 800;
+            font-size: 0.85rem;
+            margin: 0 20px 30px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+    </style>
+</head>
+
+<body>
+
+    <div class="phone-mockup">
+        <div class="screen">
+            <div class="header">
+                <div class="profile-section">
+                    <div class="avatar">RN</div>
+                    <div>
+                        <a href="driver_verification.html" style="text-decoration: none; color: inherit;">
+                            <div style="font-weight: 700; font-size: 0.9rem;">Raghu Nath</div>
+                            <div
+                                style="font-size: 0.7rem; color: var(--muted); display: flex; align-items: center; gap: 4px;">
+                                Verification: Approved <i data-lucide="external-link" size="10"></i>
+                            </div>
+                        </a>
+                    </div>
+                </div>
+                <i data-lucide="bell" size="20"></i>
+            </div>
+
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <h4>₹1,240</h4>
+                    <p>Today's Earnings</p>
+                </div>
+                <div class="stat-card">
+                    <h4>8</h4>
+                    <p>Total Trips</p>
+                </div>
+            </div>
+
+            <div class="online-toggle">
+                <div style="width: 8px; height: 8px; background: #22c55e; border-radius: 50%;"></div>
+                YOU ARE ONLINE
+            </div>
+
+            <div
+                style="padding: 0 20px; margin-bottom: 15px; display: flex; justify-content: space-between; align-items: flex-end;">
+                <h3 style="font-family: 'Outfit'; margin: 0;">Active Trip</h3>
+                <span style="color: var(--primary); font-size: 0.8rem; font-weight: 700;">View Map</span>
+            </div>
+
+            <div class="trip-card">
+                <span class="trip-status">EN ROUTE</span>
+                <div class="trip-title">Pickup: Hitech City</div>
+                <div class="trip-detail"><i data-lucide="map-pin" size="14"></i> To: Rajiv Gandhi Int Airport</div>
+                <div class="trip-detail"><i data-lucide="user" size="14"></i> Customer: Teja J.</div>
+                <div class="trip-detail"><i data-lucide="clock" size="14"></i> Est. Arrival: 16:45</div>
+            </div>
+
+            <div style="padding: 0 20px; margin-bottom: 15px;">
+                <h3 style="font-family: 'Outfit'; margin: 0;">Recent Earnings</h3>
+            </div>
+
+            <div style="padding: 0 20px;">
+                <div
+                    style="display: flex; justify-content: space-between; padding: 15px; background: rgba(255,255,255,0.02); border-radius: 12px; margin-bottom: 10px;">
+                    <div>
+                        <div style="font-size: 0.85rem; font-weight: 600;">Trip #4421</div>
+                        <div style="font-size: 0.7rem; color: var(--muted);">Today, 10:30 AM</div>
+                    </div>
+                    <div style="font-weight: 800; color: #22c55e;">+ ₹320</div>
+                </div>
+                <div
+                    style="display: flex; justify-content: space-between; padding: 15px; background: rgba(255,255,255,0.02); border-radius: 12px; margin-bottom: 10px;">
+                    <div>
+                        <div style="font-size: 0.85rem; font-weight: 600;">Trip #4418</div>
+                        <div style="font-size: 0.7rem; color: var(--muted);">Today, 08:15 AM</div>
+                    </div>
+                    <div style="font-weight: 800; color: #22c55e;">+ ₹450</div>
+                </div>
+            </div>
+
+            <div class="tabs">
+                <div class="tab-item active"><i data-lucide="home"></i> Home</div>
+                <div class="tab-item"><i data-lucide="briefcase"></i> Trips</div>
+                <div class="tab-item"><i data-lucide="wallet"></i> Wallet</div>
+                <div class="tab-item"><i data-lucide="user"></i> profile</div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        lucide.createIcons();
+    </script>
+</body>
+
+</html>

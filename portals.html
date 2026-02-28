@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chardho Portals | Unified Access</title>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Inter:wght@400;500;600&display=swap"
+        rel="stylesheet">
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        :root {
+            --primary: #f82b2b;
+            --bg: #030712;
+            --glass: rgba(17, 24, 39, 0.7);
+            --border: rgba(255, 255, 255, 0.08);
+        }
+
+        body {
+            background-color: var(--bg);
+            color: #fff;
+            font-family: 'Inter', sans-serif;
+            margin: 0;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            overflow: hidden;
+        }
+
+        .container {
+            text-align: center;
+            z-index: 10;
+        }
+
+        h1 {
+            font-family: 'Outfit', sans-serif;
+            font-size: 3.5rem;
+            font-weight: 800;
+            margin-bottom: 0.5rem;
+        }
+
+        .text-gradient {
+            background: linear-gradient(135deg, #fff 0%, #f82b2b 100%);
+            -webkit-background-clip: text;
+            background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        p {
+            color: #9ca3af;
+            font-size: 1.2rem;
+            margin-bottom: 3rem;
+        }
+
+        .portal-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 2rem;
+            max-width: 1000px;
+            width: 100%;
+            padding: 20px;
+        }
+
+        .portal-card {
+            background: var(--glass);
+            backdrop-filter: blur(16px);
+            border: 1px solid var(--border);
+            border-radius: 24px;
+            padding: 2.5rem;
+            text-decoration: none;
+            color: #fff;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .portal-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: radial-gradient(circle at top right, rgba(248, 43, 43, 0.1), transparent);
+            opacity: 0;
+            transition: 0.4s;
+        }
+
+        .portal-card:hover {
+            transform: translateY(-10px);
+            border-color: var(--primary);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
+        }
+
+        .portal-card:hover::before {
+            opacity: 1;
+        }
+
+        .icon-box {
+            width: 70px;
+            height: 70px;
+            background: rgba(255, 255, 255, 0.03);
+            border-radius: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 1.5rem;
+            color: var(--primary);
+            transition: 0.3s;
+        }
+
+        .portal-card:hover .icon-box {
+            background: var(--primary);
+            color: #fff;
+            transform: scale(1.1);
+        }
+
+        .portal-title {
+            font-family: 'Outfit';
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+        }
+
+        .portal-desc {
+            color: #9ca3af;
+            font-size: 0.9rem;
+            line-height: 1.5;
+        }
+
+        .status-badge {
+            margin-top: 1.5rem;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 0.7rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            background: rgba(34, 197, 94, 0.1);
+            color: #22c55e;
+        }
+
+        .bg-glow {
+            position: fixed;
+            width: 600px;
+            height: 600px;
+            background: radial-gradient(circle, rgba(248, 43, 43, 0.05) 0%, transparent 70%);
+            top: -200px;
+            right: -200px;
+            z-index: 1;
+        }
+
+        .bg-glow-2 {
+            position: fixed;
+            width: 500px;
+            height: 500px;
+            background: radial-gradient(circle, rgba(99, 102, 241, 0.05) 0%, transparent 70%);
+            bottom: -150px;
+            left: -150px;
+            z-index: 1;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="bg-glow"></div>
+    <div class="bg-glow-2"></div>
+
+    <div class="container slide-up">
+        <h1 class="text-gradient">Chardho Sync</h1>
+        <p>Select a portal to enter the management ecosystem.</p>
+
+        <div class="portal-grid">
+            <!-- Landing Page Portal -->
+            <a href="home_preview.html" class="portal-card">
+                <div class="icon-box">
+                    <i data-lucide="zap" size="32"></i>
+                </div>
+                <div class="portal-title">Landing Page</div>
+                <div class="portal-desc">Public website and customer booking interface.</div>
+                <div class="status-badge">Live</div>
+            </a>
+
+            <!-- Admin Portal -->
+            <a href="live_admin_preview.html" class="portal-card">
+                <div class="icon-box">
+                    <i data-lucide="layout-dashboard" size="32"></i>
+                </div>
+                <div class="portal-title">Admin Portal</div>
+                <div class="portal-desc">Fleet management, agreements, and financial reports.</div>
+                <div class="status-badge">Active</div>
+            </a>
+
+            <!-- Driver Portal -->
+            <a href="driver_portal_preview.html" class="portal-card">
+                <div class="icon-box">
+                    <i data-lucide="steering-wheel" size="32"></i>
+                </div>
+                <div class="portal-title">Driver Portal</div>
+                <div class="portal-desc">Trip assignments, earnings, and document verification.</div>
+                <div class="status-badge" style="background: rgba(239, 68, 68, 0.1); color: #ef4444;">Beta</div>
+            </a>
+        </div>
+        <div style="margin-top: 4rem; display: flex; gap: 2rem; opacity: 0.6;">
+            <a href="terms_policies.html"
+                style="color: #fff; text-decoration: none; font-size: 0.8rem; letter-spacing: 1px; text-transform: uppercase;">Terms
+                & Policies</a>
+            <a href="guidelines.html"
+                style="color: #fff; text-decoration: none; font-size: 0.8rem; letter-spacing: 1px; text-transform: uppercase;">Community
+                Guidelines</a>
+            <a href="driver_verification.html"
+                style="color: #fff; text-decoration: none; font-size: 0.8rem; letter-spacing: 1px; text-transform: uppercase;">Verification
+                Hub</a>
+        </div>
+    </div>
+
+    <script>
+        lucide.createIcons();
+    </script>
+</body>
+
+</html>

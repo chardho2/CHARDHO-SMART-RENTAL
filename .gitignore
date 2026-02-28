@@ -1,0 +1,37 @@
+# ─── CodeIgniter Core (not your code — don't commit) ───────────────────────
+system/
+
+# Third-party bootstrap / vendor assets
+public/assets/autocomplete/
+public/assets/fonts/
+public/assets/sass/
+public/assets/js/
+public/assets/css/animate.min.css
+public/assets/css/bootstrap.min.css
+public/assets/css/bootstrap-table.css
+public/assets/css/font-awesome.min.css
+public/assets/css/paper-dashboard.css
+public/assets/css/themify-icons.css
+
+# CI runtime
+application/logs/*.php
+application/cache/*
+application/logs/log-*.php
+
+# Database helper scripts (contain root credentials)
+setup_db.sql
+run_setup.bat
+verify_db.bat
+
+# OS / Editor junk
+.DS_Store
+Thumbs.db
+desktop.ini
+.vscode/
+*.swp
+*.swo
+
+# Node / Python
+node_modules/
+__pycache__/
+*.pyc

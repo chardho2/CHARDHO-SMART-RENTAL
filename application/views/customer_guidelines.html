@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Customer Do’s &amp; Don’ts | Chardho</title>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Inter:wght@400;500;600&display=swap"
+        rel="stylesheet">
+    <style>
+        :root {
+            --primary: #f82b2b;
+            --bg: #030712;
+            --glass: rgba(17, 24, 39, 0.7);
+            --border: rgba(255, 255, 255, 0.08);
+        }
+
+        body {
+            background-color: var(--bg);
+            color: #fff;
+            font-family: 'Inter', sans-serif;
+            margin: 0;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            min-height: 100vh;
+            padding: 2rem;
+        }
+
+        .card {
+            background: var(--glass);
+            backdrop-filter: blur(12px);
+            border: 1px solid var(--border);
+            border-radius: 20px;
+            padding: 2rem;
+            max-width: 800px;
+            width: 100%;
+        }
+
+        h1 {
+            font-family: 'Outfit', sans-serif;
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+            text-align: center;
+        }
+
+        .section {
+            margin-top: 1.5rem;
+        }
+
+        .section h2 {
+            font-size: 1.6rem;
+            margin-bottom: 0.5rem;
+            color: var(--primary);
+        }
+
+        ul {
+            list-style: none;
+            padding-left: 0;
+        }
+
+        li::before {
+            content: "✔";
+            color: #22c55e;
+            margin-right: 0.5rem;
+        }
+
+        .dont li::before {
+            content: "✖";
+            color: #ef4444;
+        }
+
+        .footer {
+            text-align: center;
+            margin-top: 2rem;
+            font-size: 0.9rem;
+            opacity: 0.6;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="card">
+        <h1>Customer Do’s &amp; Don’ts</h1>
+        <div class="section do">
+            <h2>Do’s</h2>
+            <ul>
+                <li>Book your vehicle well in advance to ensure availability.</li>
+                <li>Inspect the car for any existing damage before driving.</li>
+                <li>Return the vehicle with a full tank of fuel as per the rental agreement.</li>
+                <li>Report any issues or accidents to our support team immediately.</li>
+                <li>Respect traffic laws and drive responsibly.</li>
+            </ul>
+        </div>
+        <div class="section dont">
+            <h2>Don’ts</h2>
+            <ul class="dont">
+                <li>Do not smoke inside the vehicle.</li>
+                <li>Do not exceed the mileage limit specified in your contract.</li>
+                <li>Do not allow unauthorized persons to drive the rental.</li>
+                <li>Do not leave personal belongings unattended inside the car.</li>
+                <li>Do not ignore damage notices; report them promptly.</li>
+            </ul>
+        </div>
+        <div class="footer">© 2026 Chardho. All rights reserved.</div>
+    </div>
+</body>
+
+</html>
