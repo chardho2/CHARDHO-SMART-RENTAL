@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chardhogo - Your Reliable Ride Partner</title>
+    <style>
+        :root { --primary: #FFD700; --dark: #1a1a1a; --text: #333; }
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; margin: 0; color: var(--text); line-height: 1.6; }
+        nav { background: var(--dark); padding: 1rem 5%; display: flex; justify-content: space-between; align-items: center; }
+        nav .logo { color: var(--primary); font-size: 1.5rem; font-weight: bold; text-decoration: none; }
+        nav .links a { color: white; margin-left: 20px; text-decoration: none; font-size: 0.9rem; }
+        header { background: linear-gradient(rgba(0,0,0,0.7), rgba(0,0,0,0.7)), url('https://images.unsplash.com/photo-1549194388-2469d59ec642?auto=format&fit=crop&w=1350&q=80'); height: 60vh; background-size: cover; background-position: center; display: flex; flex-direction: column; justify-content: center; align-items: center; color: white; text-align: center; padding: 0 20px; }
+        header h1 { font-size: 3rem; margin-bottom: 10px; }
+        header p { font-size: 1.2rem; max-width: 600px; }
+        .btn { background: var(--primary); color: var(--dark); padding: 12px 30px; border-radius: 5px; text-decoration: none; font-weight: bold; margin-top: 20px; transition: 0.3s; }
+        .btn:hover { background: #e6c200; }
+        section { padding: 5rem 10%; text-align: center; }
+        .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 30px; margin-top: 40px; }
+        .card { padding: 30px; border-radius: 10px; box-shadow: 0 5px 15px rgba(0,0,0,0.1); }
+        .card h3 { color: var(--dark); margin-bottom: 15px; }
+        footer { background: var(--dark); color: #888; padding: 3rem 5%; text-align: center; }
+        footer .footer-links { margin-bottom: 20px; }
+        footer .footer-links a { color: #ccc; margin: 0 10px; text-decoration: none; font-size: 0.85rem; }
+        footer .footer-links a:hover { color: var(--primary); }
+    </style>
+</head>
+<body>
+    <nav>
+        <a href="/" class="logo">CHARDHOGO</a>
+        <div class="links">
+            <a href="#services">Services</a>
+            <a href="/contact.html">Contact</a>
+        </div>
+    </nav>
+
+    <header>
+        <h1>Fast. Safe. Reliable.</h1>
+        <p>Experience the new era of ride-sharing with Chardhogo. Fair pricing for riders, better earnings for drivers.</p>
+        <a href="#" class="btn">Download the App</a>
+    </header>
+
+    <section id="services">
+        <h2>Our Services</h2>
+        <div class="grid">
+            <div class="card">
+                <h3>City Rides</h3>
+                <p>Quick and affordable rides within the city limits. Available 24/7 at your doorstep.</p>
+            </div>
+            <div class="card">
+                <h3>Intercity Travel</h3>
+                <p>Comfortable long-distance travel with experienced drivers and clean vehicles.</p>
+            </div>
+            <div class="card">
+                <h3>Professional Drivers</h3>
+                <p>Every driver is background-checked and trained for the best service experience.</p>
+            </div>
+        </div>
+    </section>
+
+    <footer>
+        <div class="footer-links">
+            <a href="/about.html">About Us</a>
+            <a href="/contact.html">Contact Us</a>
+            <a href="/privacy.html">Privacy Policy</a>
+            <a href="/terms.html">Terms & Conditions</a>
+            <a href="/refund.html">Refund Policy</a>
+        </div>
+        <p>&copy; 2024 Chardhogo Technologies. All rights reserved.</p>
+    </footer>
+</body>
+</html>
