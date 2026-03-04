@@ -1,72 +1,273 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Chardhogo - Your Reliable Ride Partner</title>
+    <title>CHARDHO | Reliable Mobility Platform</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Sora:wght@500;600;700;800&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/lucide@latest"></script>
     <style>
-        :root { --primary: #FFD700; --dark: #1a1a1a; --text: #333; }
-        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; margin: 0; color: var(--text); line-height: 1.6; }
-        nav { background: var(--dark); padding: 1rem 5%; display: flex; justify-content: space-between; align-items: center; }
-        nav .logo { color: var(--primary); font-size: 1.5rem; font-weight: bold; text-decoration: none; }
-        nav .links a { color: white; margin-left: 20px; text-decoration: none; font-size: 0.9rem; }
-        header { background: linear-gradient(rgba(0,0,0,0.7), rgba(0,0,0,0.7)), url('https://images.unsplash.com/photo-1549194388-2469d59ec642?auto=format&fit=crop&w=1350&q=80'); height: 60vh; background-size: cover; background-position: center; display: flex; flex-direction: column; justify-content: center; align-items: center; color: white; text-align: center; padding: 0 20px; }
-        header h1 { font-size: 3rem; margin-bottom: 10px; }
-        header p { font-size: 1.2rem; max-width: 600px; }
-        .btn { background: var(--primary); color: var(--dark); padding: 12px 30px; border-radius: 5px; text-decoration: none; font-weight: bold; margin-top: 20px; transition: 0.3s; }
-        .btn:hover { background: #e6c200; }
-        section { padding: 5rem 10%; text-align: center; }
-        .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 30px; margin-top: 40px; }
-        .card { padding: 30px; border-radius: 10px; box-shadow: 0 5px 15px rgba(0,0,0,0.1); }
-        .card h3 { color: var(--dark); margin-bottom: 15px; }
-        footer { background: var(--dark); color: #888; padding: 3rem 5%; text-align: center; }
-        footer .footer-links { margin-bottom: 20px; }
-        footer .footer-links a { color: #ccc; margin: 0 10px; text-decoration: none; font-size: 0.85rem; }
-        footer .footer-links a:hover { color: var(--primary); }
+        :root {
+            --bg: #07111d;
+            --panel: rgba(255,255,255,0.08);
+            --line: rgba(255,255,255,0.18);
+            --text: #f7f9fc;
+            --muted: #a8b5c8;
+            --accent: #ffb703;
+            --teal: #55d7de;
+            --ok: #2cc58d;
+            --bad: #ff5f56;
+            --radius: 18px;
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        body {
+            font-family: "Space Grotesk", sans-serif;
+            color: var(--text);
+            background:
+                radial-gradient(circle at 12% 8%, rgba(255,183,3,0.18), transparent 35%),
+                radial-gradient(circle at 88% 15%, rgba(85,215,222,0.22), transparent 38%),
+                linear-gradient(160deg, #050b14 0%, #07111d 45%, #0c1b2b 100%);
+            min-height: 100vh;
+        }
+
+        .wrap { max-width: 1160px; margin: 0 auto; padding: 22px 18px 70px; }
+
+        .nav {
+            position: sticky;
+            top: 10px;
+            z-index: 30;
+            border: 1px solid var(--line);
+            background: rgba(7,17,29,0.66);
+            backdrop-filter: blur(12px);
+            border-radius: 18px;
+            padding: 12px 14px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 14px;
+        }
+
+        .brand { display: flex; align-items: center; gap: 10px; font-family: "Sora", sans-serif; font-weight: 700; }
+        .brand i { color: var(--accent); }
+
+        .links { display: flex; gap: 10px; }
+        .links a {
+            color: var(--muted);
+            text-decoration: none;
+            padding: 8px 10px;
+            border-radius: 10px;
+        }
+        .links a:hover { color: var(--text); background: rgba(255,255,255,0.08); }
+
+        .hero {
+            margin-top: 18px;
+            border: 1px solid var(--line);
+            border-radius: 24px;
+            overflow: hidden;
+            background: linear-gradient(130deg, rgba(255,183,3,0.12), rgba(85,215,222,0.08));
+            display: grid;
+            grid-template-columns: 1.35fr 1fr;
+        }
+
+        .hero-left, .hero-right { padding: 34px; }
+        .hero-left h1 {
+            font-family: "Sora", sans-serif;
+            font-size: clamp(2.2rem, 5vw, 3.9rem);
+            line-height: 1.04;
+            letter-spacing: -0.03em;
+            max-width: 10ch;
+        }
+        .hero-left h1 span { color: var(--accent); }
+        .hero-left p { margin-top: 14px; color: var(--muted); max-width: 56ch; }
+
+        .buttons { margin-top: 20px; display: flex; gap: 10px; flex-wrap: wrap; }
+        .btn {
+            border-radius: 12px;
+            text-decoration: none;
+            font-weight: 600;
+            padding: 11px 14px;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .btn-primary { background: linear-gradient(120deg, #ffb703, #ffc94f); color: #101828; }
+        .btn-ghost { border: 1px solid var(--line); color: var(--text); }
+
+        .chip {
+            margin-top: 16px;
+            border: 1px solid var(--line);
+            background: rgba(0,0,0,0.3);
+            border-radius: 999px;
+            padding: 8px 12px;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.9rem;
+        }
+        .dot { width: 8px; height: 8px; border-radius: 50%; background: var(--muted); }
+        .dot.live { background: var(--ok); }
+
+        .panel {
+            border: 1px solid var(--line);
+            border-radius: var(--radius);
+            background: var(--panel);
+            padding: 14px;
+            margin-bottom: 10px;
+        }
+
+        .stats { margin-top: 16px; display: grid; gap: 12px; grid-template-columns: repeat(3, 1fr); }
+        .stat {
+            border: 1px solid var(--line);
+            background: rgba(255,255,255,0.05);
+            border-radius: var(--radius);
+            padding: 14px;
+        }
+        .stat strong { font-size: 1.15rem; font-family: "Sora", sans-serif; }
+        .stat p { color: var(--muted); margin-top: 4px; font-size: 0.9rem; }
+
+        .grid { margin-top: 16px; display: grid; gap: 12px; grid-template-columns: repeat(3, 1fr); }
+        .card {
+            border: 1px solid var(--line);
+            border-radius: var(--radius);
+            background: rgba(255,255,255,0.05);
+            padding: 16px;
+        }
+        .card h3 { font-family: "Sora", sans-serif; margin-bottom: 8px; }
+        .card p { color: var(--muted); font-size: 0.92rem; }
+
+        .footer {
+            margin-top: 20px;
+            padding: 12px 4px;
+            color: var(--muted);
+            display: flex;
+            justify-content: space-between;
+            gap: 8px;
+            font-size: 0.85rem;
+        }
+
+        @media (max-width: 960px) {
+            .hero { grid-template-columns: 1fr; }
+            .stats, .grid { grid-template-columns: 1fr 1fr; }
+        }
+
+        @media (max-width: 680px) {
+            .links { display: none; }
+            .stats, .grid { grid-template-columns: 1fr; }
+            .hero-left, .hero-right { padding: 24px; }
+            .footer { flex-direction: column; }
+        }
     </style>
 </head>
 <body>
-    <nav>
-        <a href="/" class="logo">CHARDHOGO</a>
-        <div class="links">
-            <a href="#services">Services</a>
-            <a href="/contact.html">Contact</a>
-        </div>
-    </nav>
-
-    <header>
-        <h1>Fast. Safe. Reliable.</h1>
-        <p>Experience the new era of ride-sharing with Chardhogo. Fair pricing for riders, better earnings for drivers.</p>
-        <a href="#" class="btn">Download the App</a>
-    </header>
-
-    <section id="services">
-        <h2>Our Services</h2>
-        <div class="grid">
-            <div class="card">
-                <h3>City Rides</h3>
-                <p>Quick and affordable rides within the city limits. Available 24/7 at your doorstep.</p>
+    <main class="wrap">
+        <nav class="nav">
+            <div class="brand"><i data-lucide="car"></i> CHARDHO</div>
+            <div class="links">
+                <a href="#platform">Platform</a>
+                <a href="#safety">Safety</a>
+                <a href="/contact.html">Contact</a>
+                <a href="/terms.html">Terms</a>
             </div>
-            <div class="card">
-                <h3>Intercity Travel</h3>
-                <p>Comfortable long-distance travel with experienced drivers and clean vehicles.</p>
-            </div>
-            <div class="card">
-                <h3>Professional Drivers</h3>
-                <p>Every driver is background-checked and trained for the best service experience.</p>
-            </div>
-        </div>
-    </section>
+        </nav>
 
-    <footer>
-        <div class="footer-links">
-            <a href="/about.html">About Us</a>
-            <a href="/contact.html">Contact Us</a>
-            <a href="/privacy.html">Privacy Policy</a>
-            <a href="/terms.html">Terms & Conditions</a>
-            <a href="/refund.html">Refund Policy</a>
-        </div>
-        <p>&copy; 2024 Chardhogo Technologies. All rights reserved.</p>
-    </footer>
+        <section class="hero">
+            <div class="hero-left">
+                <h1>Reliable trips with <span>real-time confidence.</span></h1>
+                <p>City rides, airport runs, and intercity travel with transparent pricing, verified drivers, and smoother booking flows.</p>
+                <div class="buttons">
+                    <a class="btn btn-primary" href="/contact.html">Get Started <i data-lucide="arrow-right"></i></a>
+                    <a class="btn btn-ghost" href="/privacy.html">Privacy & Trust</a>
+                </div>
+                <div class="chip"><span class="dot" id="apiDot"></span><span id="apiText">Checking backend...</span></div>
+            </div>
+            <div class="hero-right">
+                <div class="panel">
+                    <strong>Public API Config</strong>
+                    <p id="configText" style="color: var(--muted); margin-top: 6px;">Loading...</p>
+                </div>
+                <div class="panel" id="platform">
+                    <strong>Platform Promise</strong>
+                    <p style="color: var(--muted); margin-top: 6px;">Fast dispatch, safer routes, and clear communication during each ride stage.</p>
+                </div>
+            </div>
+        </section>
+
+        <section class="stats">
+            <article class="stat">
+                <strong>24/7</strong>
+                <p>Driver and rider support</p>
+            </article>
+            <article class="stat">
+                <strong>Live</strong>
+                <p>Trip status visibility</p>
+            </article>
+            <article class="stat">
+                <strong>Secure</strong>
+                <p>Wallet and payment flows</p>
+            </article>
+        </section>
+
+        <section class="grid" id="safety">
+            <article class="card">
+                <h3>Driver Verification</h3>
+                <p>Structured onboarding checks before first trip activation.</p>
+            </article>
+            <article class="card">
+                <h3>Route Monitoring</h3>
+                <p>Ride-aware updates and monitoring hooks for safer operations.</p>
+            </article>
+            <article class="card">
+                <h3>Policy Transparency</h3>
+                <p>Public terms, privacy, and refund pages served directly by backend.</p>
+            </article>
+        </section>
+
+        <footer class="footer">
+            <span>&copy; 2026 Chardhogo Technologies</span>
+            <span>Server: <code>/api/status</code> <code>/api/health</code> <code>/api/public/config</code></span>
+        </footer>
+    </main>
+
+    <script>
+        lucide.createIcons();
+
+        async function loadStatus() {
+            const dot = document.getElementById('apiDot');
+            const text = document.getElementById('apiText');
+            try {
+                const res = await fetch('/api/status');
+                if (!res.ok) throw new Error('bad status');
+                const data = await res.json();
+                dot.classList.add('live');
+                text.textContent = `Backend ${data.status} | Uptime ${data.uptime_seconds}s`;
+            } catch (err) {
+                dot.style.background = 'var(--bad)';
+                text.textContent = 'Backend unavailable';
+            }
+        }
+
+        async function loadConfig() {
+            const target = document.getElementById('configText');
+            try {
+                const res = await fetch('/api/public/config');
+                if (!res.ok) throw new Error('bad config');
+                const data = await res.json();
+                const enabled = Object.entries(data.features || {})
+                    .filter(([, value]) => value)
+                    .map(([key]) => key)
+                    .join(', ');
+                target.textContent = `${data.brand} | API ${data.api_base} | Features: ${enabled}`;
+            } catch (err) {
+                target.textContent = 'Config endpoint not available.';
+            }
+        }
+
+        loadStatus();
+        loadConfig();
+    </script>
 </body>
 </html>

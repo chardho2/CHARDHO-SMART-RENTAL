@@ -1,4 +1,5 @@
 import { useCallback } from "react";
+import { Redirect } from "expo-router";
 import { FontAwesome, Ionicons, MaterialIcons } from "@expo/vector-icons";
 import { Tabs, router, useFocusEffect } from "expo-router";
 import { HapticTab } from "../../components/common/haptic-tab";
@@ -7,8 +8,8 @@ import { useAuth } from "../../context/AuthContext";
 import { socketService } from "../../services/socketService";
 
 export default function TabsLayout() {
-  const { colors, darkMode } = useSettings();
-  const { user } = useAuth();
+  const { colors } = useSettings();
+  const { user, isLoading } = useAuth();
 
   useFocusEffect(
     useCallback(() => {
@@ -18,6 +19,10 @@ export default function TabsLayout() {
       }
     }, [user])
   );
+
+  if (isLoading) return null;
+  if (!user) return <Redirect href="/login" />;
+  if (user.userType === "driver") return <Redirect href="/driver/tabs/dashboard" />;
 
   return (
     <Tabs

@@ -1,202 +1,478 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="en">
-
 <head>
-	<meta charset="UTF-8">
-	<meta name="viewport" content="width=device-width, initial-scale=1.0">
-	<title>CHARDHO | Smart Rental System</title>
-	<link
-		href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Inter:wght@400;500;600&display=swap"
-		rel="stylesheet">
-	<script src="https://unpkg.com/lucide@latest"></script>
-	<link rel="stylesheet" href="../public/assets/css/chardho_main.css">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CHARDHO | Smart Rental System</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=Sora:wght@500;600;700;800&display=swap" rel="stylesheet">
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <style>
+        :root {
+            --bg: #08101a;
+            --bg-soft: #0f1c2b;
+            --surface: rgba(255, 255, 255, 0.08);
+            --surface-border: rgba(255, 255, 255, 0.16);
+            --text: #f6f8fb;
+            --muted: #a2b2c5;
+            --accent: #ffb703;
+            --accent-2: #52d3d8;
+            --ok: #2cc58d;
+            --danger: #ff5f56;
+            --radius: 18px;
+            --shadow: 0 20px 40px rgba(0, 0, 0, 0.35);
+        }
+
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        body {
+            font-family: "Space Grotesk", sans-serif;
+            color: var(--text);
+            background:
+                radial-gradient(circle at 8% 15%, rgba(255, 183, 3, 0.18), transparent 35%),
+                radial-gradient(circle at 88% 10%, rgba(82, 211, 216, 0.2), transparent 38%),
+                linear-gradient(160deg, #050b12 0%, #08101a 40%, #0b1625 100%);
+            min-height: 100vh;
+        }
+
+        .noise {
+            position: fixed;
+            inset: 0;
+            pointer-events: none;
+            opacity: 0.08;
+            background-image: radial-gradient(#fff 0.6px, transparent 0.6px);
+            background-size: 4px 4px;
+            z-index: 0;
+        }
+
+        .shell {
+            position: relative;
+            z-index: 1;
+            max-width: 1180px;
+            margin: 0 auto;
+            padding: 20px 18px 70px;
+        }
+
+        .nav {
+            position: sticky;
+            top: 12px;
+            z-index: 40;
+            backdrop-filter: blur(14px);
+            background: rgba(8, 16, 26, 0.62);
+            border: 1px solid var(--surface-border);
+            border-radius: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 18px;
+            padding: 12px 16px;
+        }
+
+        .brand {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            font-family: "Sora", sans-serif;
+            font-weight: 700;
+            letter-spacing: 0.04em;
+        }
+
+        .brand img {
+            width: 36px;
+            height: 36px;
+            border-radius: 10px;
+            object-fit: cover;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 12px;
+            align-items: center;
+        }
+
+        .nav-links a {
+            text-decoration: none;
+            color: var(--muted);
+            font-size: 0.94rem;
+            padding: 8px 10px;
+            border-radius: 10px;
+            transition: 0.2s ease;
+        }
+
+        .nav-links a:hover {
+            color: var(--text);
+            background: rgba(255, 255, 255, 0.08);
+        }
+
+        .menu-btn {
+            display: none;
+            border: none;
+            background: transparent;
+            color: var(--text);
+            cursor: pointer;
+        }
+
+        .hero {
+            margin-top: 24px;
+            border: 1px solid var(--surface-border);
+            border-radius: 26px;
+            overflow: hidden;
+            box-shadow: var(--shadow);
+            background:
+                linear-gradient(125deg, rgba(255, 183, 3, 0.12), rgba(82, 211, 216, 0.08)),
+                url('../public/assets/img/hero_bg.jpg') center/cover no-repeat;
+            min-height: 72vh;
+            display: grid;
+            grid-template-columns: 1.3fr 1fr;
+            position: relative;
+        }
+
+        .hero::after {
+            content: "";
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(90deg, rgba(8, 16, 26, 0.88) 32%, rgba(8, 16, 26, 0.46) 100%);
+            pointer-events: none;
+        }
+
+        .hero-content,
+        .hero-panel {
+            position: relative;
+            z-index: 2;
+            padding: 48px 34px;
+        }
+
+        .hero-content h1 {
+            font-family: "Sora", sans-serif;
+            font-size: clamp(2.3rem, 5vw, 4.1rem);
+            line-height: 1.03;
+            letter-spacing: -0.03em;
+            max-width: 9ch;
+        }
+
+        .hero-content h1 span { color: var(--accent); }
+
+        .hero-content p {
+            margin-top: 18px;
+            max-width: 52ch;
+            color: var(--muted);
+            font-size: 1.05rem;
+        }
+
+        .hero-actions {
+            margin-top: 28px;
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+
+        .btn {
+            border: 1px solid transparent;
+            border-radius: 13px;
+            padding: 12px 16px;
+            text-decoration: none;
+            font-weight: 600;
+            cursor: pointer;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            transition: 0.18s ease;
+        }
+
+        .btn-primary { background: linear-gradient(120deg, #ffb703, #ffc947); color: #101828; }
+        .btn-primary:hover { transform: translateY(-1px); }
+
+        .btn-ghost {
+            border-color: var(--surface-border);
+            color: var(--text);
+            background: rgba(255, 255, 255, 0.07);
+        }
+
+        .status-chip {
+            margin-top: 20px;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 0.88rem;
+            padding: 8px 12px;
+            border-radius: 999px;
+            border: 1px solid var(--surface-border);
+            background: rgba(0, 0, 0, 0.35);
+        }
+
+        .dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: var(--muted);
+            box-shadow: 0 0 0 0 rgba(44, 197, 141, 0.6);
+        }
+
+        .dot.live { background: var(--ok); animation: pulse 1.6s infinite; }
+
+        @keyframes pulse {
+            0% { box-shadow: 0 0 0 0 rgba(44, 197, 141, 0.6); }
+            70% { box-shadow: 0 0 0 9px rgba(44, 197, 141, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(44, 197, 141, 0); }
+        }
+
+        .hero-panel { display: grid; gap: 12px; align-content: end; }
+
+        .glass {
+            border: 1px solid var(--surface-border);
+            background: var(--surface);
+            backdrop-filter: blur(8px);
+            border-radius: var(--radius);
+            padding: 14px;
+        }
+
+        .price-grid { display: grid; gap: 8px; }
+
+        .price-row {
+            display: grid;
+            grid-template-columns: 1fr auto;
+            align-items: center;
+            padding: 11px;
+            border-radius: 12px;
+            background: rgba(255, 255, 255, 0.04);
+        }
+
+        .fleet {
+            margin-top: 28px;
+            display: grid;
+            gap: 14px;
+            grid-template-columns: repeat(3, 1fr);
+        }
+
+        .car {
+            border: 1px solid var(--surface-border);
+            border-radius: var(--radius);
+            overflow: hidden;
+            background: rgba(255, 255, 255, 0.04);
+            transition: transform 0.18s ease;
+        }
+
+        .car:hover { transform: translateY(-4px); }
+
+        .car img {
+            width: 100%;
+            height: 150px;
+            object-fit: cover;
+            background: rgba(255, 255, 255, 0.03);
+        }
+
+        .car-body { padding: 12px; display: grid; gap: 8px; }
+
+        .pill {
+            display: inline-block;
+            padding: 5px 9px;
+            border-radius: 999px;
+            font-size: 0.73rem;
+            letter-spacing: 0.04em;
+            color: #fff;
+            background: rgba(82, 211, 216, 0.28);
+            border: 1px solid rgba(82, 211, 216, 0.5);
+        }
+
+        .sections {
+            margin-top: 28px;
+            display: grid;
+            gap: 14px;
+            grid-template-columns: repeat(3, 1fr);
+        }
+
+        .section-card {
+            border-radius: var(--radius);
+            border: 1px solid var(--surface-border);
+            background: rgba(255, 255, 255, 0.05);
+            padding: 16px;
+        }
+
+        .section-card h3 {
+            font-family: "Sora", sans-serif;
+            margin-bottom: 8px;
+            font-size: 1.05rem;
+        }
+
+        .section-card p { color: var(--muted); font-size: 0.92rem; }
+
+        .footer {
+            margin-top: 26px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 10px;
+            padding: 12px 8px;
+            color: var(--muted);
+            font-size: 0.86rem;
+        }
+
+        .reveal {
+            opacity: 0;
+            transform: translateY(16px);
+            transition: opacity 0.44s ease, transform 0.44s ease;
+        }
+
+        .reveal.show { opacity: 1; transform: none; }
+
+        @media (max-width: 980px) {
+            .hero { grid-template-columns: 1fr; min-height: auto; }
+            .fleet, .sections { grid-template-columns: 1fr 1fr; }
+        }
+
+        @media (max-width: 760px) {
+            .menu-btn { display: inline-flex; }
+
+            .nav-links {
+                position: absolute;
+                left: 0;
+                right: 0;
+                top: calc(100% + 8px);
+                background: rgba(8, 16, 26, 0.95);
+                border: 1px solid var(--surface-border);
+                border-radius: 14px;
+                padding: 10px;
+                display: none;
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            .nav-links.open { display: flex; }
+            .fleet, .sections { grid-template-columns: 1fr; }
+        }
+    </style>
 </head>
-
 <body>
+    <div class="noise"></div>
+    <main class="shell">
+        <nav class="nav">
+            <div class="brand">
+                <img src="../public/assets/img/chardho-logo.png" alt="CHARDHO">
+                <span>CHARDHO</span>
+            </div>
+            <button class="menu-btn" id="menuBtn" aria-label="menu">
+                <i data-lucide="menu"></i>
+            </button>
+            <div class="nav-links" id="navLinks">
+                <a href="#fleet">Fleet</a>
+                <a href="#services">Services</a>
+                <a href="#safety">Safety</a>
+                <a href="./login.html">Login</a>
+                <a href="./signup.html">Sign Up</a>
+            </div>
+        </nav>
 
-	<!-- Navigation -->
-	<nav id="navbar">
-		<div class="logo">
-			<i data-lucide="zap" style="color: var(--primary); fill: var(--primary);"></i>
-			CHAR<span>DHO</span>
-		</div>
-		<div class="nav-links">
-			<a href="#home">Home</a>
-			<a href="#fleet">Fleet</a>
-			<a href="#about">About</a>
-			<a href="#support">Support</a>
-		</div>
-		<div class="auth-btns">
-			<button class="btn btn-outline" style="border-radius: 12px;">Login</button>
-			<button class="btn btn-primary pulse-anim">Sign Up</button>
-		</div>
-	</nav>
+        <section class="hero reveal">
+            <div class="hero-content">
+                <h1>Move smarter with <span>faster city rentals.</span></h1>
+                <p>
+                    Premium cars, transparent pricing, instant booking confirmation, and real-time trip support.
+                    Designed for daily commutes, airport transfers, and full-day travel.
+                </p>
+                <div class="hero-actions">
+                    <a href="./signup.html" class="btn btn-primary">Book A Ride <i data-lucide="arrow-right"></i></a>
+                    <a href="#fleet" class="btn btn-ghost">Compare Fleet</a>
+                </div>
+                <div class="status-chip">
+                    <span class="dot" id="apiDot"></span>
+                    <span id="apiText">Checking backend status...</span>
+                </div>
+            </div>
+            <aside class="hero-panel">
+                <div class="glass">
+                    <strong style="font-family: Sora, sans-serif;">Popular Pricing</strong>
+                    <div class="price-grid" style="margin-top: 10px;">
+                        <div class="price-row"><span>City Drop</span><strong>INR 149+</strong></div>
+                        <div class="price-row"><span>Hourly Rental</span><strong>INR 499+</strong></div>
+                        <div class="price-row"><span>Airport Pick-up</span><strong>INR 699+</strong></div>
+                    </div>
+                </div>
+                <div class="glass">
+                    <strong style="font-family: Sora, sans-serif;">Why Riders Switch</strong>
+                    <p style="margin-top: 8px; color: var(--muted); font-size: 0.92rem;">No surprise charges, verified drivers, and faster support response from a local team.</p>
+                </div>
+            </aside>
+        </section>
 
-	<!-- Hero Section -->
-	<section class="hero" id="home">
-		<div class="hero-bg" style="background-image: url('../public/assets/img/hero_bg.jpg');">
-		</div>
-		<div class="hero-content">
-			<h1>Elegance <br><span>In Motion.</span></h1>
-			<p
-				style="font-size: 1.3rem; color: var(--muted); margin-bottom: 3.5rem; max-width: 650px; margin-inline: auto;">
-				Premium car rentals built for the modern traveler. Experience the next generation of urban mobility.</p>
-			<div style="display: flex; gap: 1.5rem; justify-content: center;">
-				<button class="btn btn-primary" style="padding: 1.2rem 3.5rem; font-size: 1rem;">Reserve a Car <i
-						data-lucide="arrow-right"></i></button>
-				<button class="btn btn-outline" style="padding: 1.2rem 3.5rem; font-size: 1rem;">View Pricing</button>
-			</div>
-		</div>
-	</section>
+        <section id="fleet" class="fleet">
+            <article class="car reveal">
+                <img src="../public/assets/img/ertiga.png" alt="Ertiga">
+                <div class="car-body">
+                    <h3>Maruti Ertiga</h3>
+                    <span class="pill">7 SEATER</span>
+                    <p style="color: var(--muted);">Comfort trips for families and airport luggage.</p>
+                </div>
+            </article>
+            <article class="car reveal">
+                <img src="../public/assets/img/dzire.png" alt="Dzire">
+                <div class="car-body">
+                    <h3>Swift Dzire</h3>
+                    <span class="pill">SEDAN</span>
+                    <p style="color: var(--muted);">Balanced city mileage and premium ride quality.</p>
+                </div>
+            </article>
+            <article class="car reveal">
+                <img src="../public/assets/img/alto.png" alt="Alto">
+                <div class="car-body">
+                    <h3>Alto LXI</h3>
+                    <span class="pill">CITY</span>
+                    <p style="color: var(--muted);">Best for short urban routes and budget bookings.</p>
+                </div>
+            </article>
+        </section>
 
-	<!-- Fleet Section -->
-	<section id="fleet">
-		<div class="section-header reveal">
-			<h2>The Elite Fleet</h2>
-			<p>Pristine vehicles, curated for performance and comfort.</p>
-		</div>
+        <section class="sections">
+            <article class="section-card reveal" id="services">
+                <h3>Live Trip Tracking</h3>
+                <p>Trip lifecycle updates from pickup to drop-off with transparent ETA visibility.</p>
+            </article>
+            <article class="section-card reveal" id="safety">
+                <h3>Safety First Model</h3>
+                <p>Driver verification, emergency support workflow, and rapid escalation tools.</p>
+            </article>
+            <article class="section-card reveal">
+                <h3>Fast Wallet Flows</h3>
+                <p>Quick digital payments and clean receipts designed for repeat riders and operators.</p>
+            </article>
+        </section>
 
-		<div class="fleet-grid">
-			<!-- Ertiga -->
-			<div class="car-card reveal glow-border">
-				<div class="car-img-container">
-					<div class="car-img" style="background-image: url('../public/assets/img/ertiga.png')">
-					</div>
-				</div>
-				<div class="car-info">
-					<div class="car-name">Maruti Ertiga <span
-							style="font-size: 0.8rem; background: var(--primary); color: #fff; padding: 4px 12px; border-radius: 20px;">7
-							SEATER</span></div>
-					<div class="pricing-wrap">
-						<div class="price-item">
-							<span class="price-val">₹250</span>
-							<span class="price-label">Hour</span>
-						</div>
-						<div class="price-item">
-							<span class="price-val">₹2.5k</span>
-							<span class="price-label">Day</span>
-						</div>
-						<div class="price-item">
-							<span class="price-val">₹12</span>
-							<span class="price-label">KM</span>
-						</div>
-					</div>
-					<button class="btn btn-primary" style="width: 100%; justify-content: center;">Book Now</button>
-				</div>
-			</div>
+        <footer class="footer">
+            <span>&copy; 2026 CHARDHO RENTAL SYSTEMS</span>
+            <span>Built for mobile + desktop experiences</span>
+        </footer>
+    </main>
 
-			<!-- Swift -->
-			<div class="car-card reveal glow-border" style="transition-delay: 0.1s;">
-				<div class="car-img-container">
-					<div class="car-img" style="background-image: url('../public/assets/img/dzire.png')">
-					</div>
-				</div>
-				<div class="car-info">
-					<div class="car-name">Swift Dzire <span
-							style="font-size: 0.8rem; background: #fff; color: #000; padding: 4px 12px; border-radius: 20px;">SEDAN</span>
-					</div>
-					<div class="pricing-wrap">
-						<div class="price-item">
-							<span class="price-val">₹150</span>
-							<span class="price-label">Hour</span>
-						</div>
-						<div class="price-item">
-							<span class="price-val">₹1.8k</span>
-							<span class="price-label">Day</span>
-						</div>
-						<div class="price-item">
-							<span class="price-val">₹10</span>
-							<span class="price-label">KM</span>
-						</div>
-					</div>
-					<button class="btn btn-primary" style="width: 100%; justify-content: center;">Book Now</button>
-				</div>
-			</div>
+    <script>
+        lucide.createIcons();
 
-			<!-- Alto -->
-			<div class="car-card reveal glow-border" style="transition-delay: 0.2s;">
-				<div class="car-img-container">
-					<div class="car-img" style="background-image: url('../public/assets/img/alto.png')">
-					</div>
-				</div>
-				<div class="car-info">
-					<div class="car-name">Alto LXI <span
-							style="font-size: 0.8rem; background: var(--border); color: var(--muted); padding: 4px 12px; border-radius: 20px;">CITY</span>
-					</div>
-					<div class="pricing-wrap">
-						<div class="price-item">
-							<span class="price-val">₹100</span>
-							<span class="price-label">Hour</span>
-						</div>
-						<div class="price-item">
-							<span class="price-val">₹1.2k</span>
-							<span class="price-label">Day</span>
-						</div>
-						<div class="price-item">
-							<span class="price-val">₹8</span>
-							<span class="price-label">KM</span>
-						</div>
-					</div>
-					<button class="btn btn-primary" style="width: 100%; justify-content: center;">Book Now</button>
-				</div>
-			</div>
-		</div>
-	</section>
+        const menuBtn = document.getElementById('menuBtn');
+        const navLinks = document.getElementById('navLinks');
+        menuBtn.addEventListener('click', () => navLinks.classList.toggle('open'));
 
-	<!-- Support Panel Mockup -->
-	<section id="support">
-		<div class="glass-panel reveal glow-border" style="max-width: 900px; margin: 0 auto; text-align: center;">
-			<i data-lucide="shield-check"
-				style="width: 60px; height: 60px; color: var(--primary); margin-bottom: 2rem;"></i>
-			<h2 style="font-family: 'Outfit'; font-size: 2.5rem; margin-bottom: 1rem;">Secure Booking & Safety</h2>
-			<p style="color: var(--muted); margin-bottom: 2.5rem;">Every ride is insured and monitored 24/7. Our
-				specialized safety protocols ensure you reach your destination with peace of mind.</p>
-			<div style="display: flex; gap: 2rem; justify-content: center; flex-wrap: wrap;">
-				<div style="display: flex; align-items: center; gap: 10px; color: var(--muted);"><i
-						data-lucide="check-circle" style="color: green;"></i> 24/7 Assistance</div>
-				<div style="display: flex; align-items: center; gap: 10px; color: var(--muted);"><i
-						data-lucide="check-circle" style="color: green;"></i> Zero Hidden Costs</div>
-				<div style="display: flex; align-items: center; gap: 10px; color: var(--muted);"><i
-						data-lucide="check-circle" style="color: green;"></i> Easy UPI Payments</div>
-			</div>
-		</div>
-	</section>
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach((entry) => {
+                if (entry.isIntersecting) entry.target.classList.add('show');
+            });
+        }, { threshold: 0.12 });
+        document.querySelectorAll('.reveal').forEach((el) => observer.observe(el));
 
-	<!-- Footer -->
-	<footer>
-		<div class="logo" style="margin-bottom: 1.5rem; justify-content: center;">CHAR<span>DHO</span></div>
-		<p style="color: var(--muted); margin-bottom: 3rem; max-width: 450px; margin-inline: auto;">Redefining
-			transportation in India. Join thousands of happy travelers today.</p>
-		<div style="display: flex; gap: 2rem; justify-content: center; margin-bottom: 4rem;">
-			<a href="#" style="color: var(--muted);"><i data-lucide="instagram"></i></a>
-			<a href="#" style="color: var(--muted);"><i data-lucide="twitter"></i></a>
-			<a href="#" style="color: var(--muted);"><i data-lucide="facebook"></i></a>
-		</div>
-		<p style="font-size: 0.8rem; color: #333;">&copy; 2026 CHARDHO RENTAL SYSTEMS. ALL RIGHTS RESERVED.</p>
-	</footer>
+        async function updateApiStatus() {
+            const dot = document.getElementById('apiDot');
+            const text = document.getElementById('apiText');
+            try {
+                const response = await fetch('http://localhost:4000/api/status');
+                if (!response.ok) throw new Error('status failed');
+                const data = await response.json();
+                dot.classList.add('live');
+                text.textContent = 'Backend online: ' + (data.status || 'running');
+            } catch (error) {
+                dot.style.background = 'var(--danger)';
+                text.textContent = 'Backend offline. Start server on port 4000.';
+            }
+        }
 
-	<script>
-		// Init Lucide
-		lucide.createIcons();
-
-		// Navbar Scroll Logic
-		window.addEventListener('scroll', () => {
-			const nav = document.getElementById('navbar');
-			if (window.scrollY > 50) nav.classList.add('scrolled');
-			else nav.classList.remove('scrolled');
-		});
-
-		// Intersection Observer for Reveal Animations
-		const observer = new IntersectionObserver((entries) => {
-			entries.forEach(entry => {
-				if (entry.isIntersecting) {
-					entry.target.classList.add('active');
-				}
-			});
-		}, { threshold: 0.15 });
-
-		document.querySelectorAll('.reveal').forEach(el => observer.observe(el));
-	</script>
+        updateApiStatus();
+    </script>
 </body>
-
 </html>

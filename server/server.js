@@ -1,8 +1,8 @@
 require('dotenv').config({ path: __dirname + '/.env' });
+const { connectDB } = require('./db');
 
 
 const express = require('express');
-const mongoose = require('mongoose');
 const dns = require('dns');
 
 // Force Node.js to use Google DNS to resolve MongoDB SRV records
@@ -19,26 +19,37 @@ const PORT = process.env.PORT || 4000;
 
 // Middleware
 // CORS configuration for cookies
+const defaultAllowedOrigins = [
+    'http://localhost:19006',
+    'http://localhost:8081',
+    'http://localhost:8000',
+    'http://localhost:3000',
+    'http://localhost:5173',
+    'http://127.0.0.1:19006',
+    'http://127.0.0.1:8081',
+    'http://127.0.0.1:8000',
+    'http://127.0.0.1:3000',
+    'http://127.0.0.1:5173',
+    'exp://192.168.0.103:8081', // Update with your IP
+    'exp://10.81.145.87:8081'   // Update with your IP
+];
+
+const configuredOrigins = (process.env.CORS_ORIGIN || '')
+    .split(',')
+    .map(s => s.trim())
+    .filter(Boolean);
+
+const allowedOrigins = configuredOrigins.length > 0 ? configuredOrigins : defaultAllowedOrigins;
+
 app.use(cors({
     origin: function (origin, callback) {
         // Allow requests with no origin (like mobile apps or curl requests)
         if (!origin) return callback(null, true);
 
-        // List of allowed origins
-        const allowedOrigins = [
-            'http://localhost:19006',
-            'http://localhost:8081',
-            'http://127.0.0.1:19006',
-            'http://127.0.0.1:8081',
-            'exp://192.168.0.103:8081', // Update with your IP
-            'exp://10.81.145.87:8081'   // Update with your IP
-        ];
-
         if (allowedOrigins.indexOf(origin) !== -1 || origin.startsWith('exp://')) {
-            callback(null, true);
-        } else {
-            callback(null, true); // Allow all in development
+            return callback(null, true);
         }
+        return callback(new Error('CORS origin not allowed'));
     },
     credentials: true, // Enable credentials (cookies, authorization headers)
     methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH'],
@@ -74,39 +85,9 @@ app.use(xss());
 // Apply general rate limiting to all routes
 app.use('/api/', apiLimiter);
 
-// Connect to MongoDB
-const mongooseOptions = {
-    family: 4, // Force IPv4
-    serverSelectionTimeoutMS: 5000, // Timeout after 5 seconds instead of 30s
-};
+// Connect to MongoDB (Atlas → in-memory fallback)
+connectDB();
 
-if (!process.env.MONGODB_URI) {
-    console.error('❌ MONGODB_URI is not defined in .env file');
-} else {
-    mongoose.connect(process.env.MONGODB_URI, mongooseOptions)
-        .then(() => {
-            console.log('✅ MongoDB connected successfully to Cluster');
-        })
-        .catch(err => {
-            console.error('❌ Initial MongoDB connection error:', err.message);
-            if (err.message.includes('ECONNREFUSED')) {
-                console.log('💡 TIP: This usually means your DNS is blocking the connection. Try changing your DNS to 8.8.8.8');
-            }
-            console.log('⚠️ Server will continue running without database connection.');
-        });
-}
-
-// MongoDB connection event handlers
-const db = mongoose.connection;
-
-db.on('disconnected', () => {
-    console.log('⚠️ MongoDB disconnected');
-});
-
-// The error handler catches post-connection errors
-db.on('error', (err) => {
-    console.error('❌ MongoDB runtime error:', err);
-});
 // Basic route - Serve landing page for Razorpay compliance
 app.get('/', (req, res) => {
     res.sendFile(path.join(__dirname, 'public', 'index.html'));
@@ -116,7 +97,33 @@ app.get('/', (req, res) => {
 app.get('/api/status', (req, res) => {
     res.json({
         message: 'Welcome to the Chardhogo Backend API',
-        status: 'running'
+        status: 'running',
+        now: new Date().toISOString(),
+        uptime_seconds: Math.floor(process.uptime()),
+        environment: process.env.NODE_ENV || 'development'
+    });
+});
+
+// Lightweight health endpoint for UI and infra checks
+app.get('/api/health', (req, res) => {
+    res.status(200).json({
+        ok: true,
+        service: 'chardhogo-backend',
+        timestamp: new Date().toISOString()
+    });
+});
+
+// Public config for web clients
+app.get('/api/public/config', (req, res) => {
+    res.json({
+        brand: 'CHARDHO',
+        api_base: `http://localhost:${PORT}`,
+        support_email: process.env.SUPPORT_EMAIL || 'support@chardho.com',
+        features: {
+            live_tracking: true,
+            wallet: true,
+            driver_portal: true
+        }
     });
 });
 
