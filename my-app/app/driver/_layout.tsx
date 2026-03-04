@@ -1,8 +1,16 @@
+import { Redirect } from "expo-router";
 import { Drawer } from "expo-router/drawer";
 import DriverDrawer from "../../components/driver/DriverDrawer";
 import { DriverAppProvider } from "../../context/DriverAppContext";
+import { useAuth } from "../../context/AuthContext";
 
 export default function DriverLayout() {
+    const { user, isLoading } = useAuth();
+
+    if (isLoading) return null;
+    if (!user) return <Redirect href="/login" />;
+    if (user.userType !== "driver") return <Redirect href="/(tabs)/home" />;
+
     return (
         <DriverAppProvider>
             <Drawer

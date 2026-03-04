@@ -7,6 +7,14 @@ const axios = require('axios');
 const { authLimiter, registrationLimiter } = require('../middleware/rateLimiter');
 const router = express.Router();
 
+const getRefreshTokenSecret = () => {
+    if (process.env.REFRESH_TOKEN_SECRET) return process.env.REFRESH_TOKEN_SECRET;
+    if (process.env.NODE_ENV !== 'production' && process.env.JWT_SECRET) {
+        return process.env.JWT_SECRET + "_refresh";
+    }
+    throw new Error('REFRESH_TOKEN_SECRET is required in production');
+};
+
 // Helper: Generate Tokens
 const generateTokens = (user) => {
     const payload = { id: user._id, userType: user.userType };
@@ -21,7 +29,7 @@ const generateTokens = (user) => {
     // Refresh Token (Long-lived)
     const refreshToken = jwt.sign(
         payload,
-        process.env.REFRESH_TOKEN_SECRET || process.env.JWT_SECRET + "_refresh", // Fallback if env not set
+        getRefreshTokenSecret(),
         { expiresIn: process.env.REFRESH_TOKEN_EXPIRES_IN || '7d' }
     );
 
@@ -174,9 +182,6 @@ const validatePassword = (password) => {
 
 // Register user or driver
 router.post('/register', registrationLimiter, async (req, res) => {
-    // Lazy load socket tools to avoid circular deps
-    const NotificationService = require('../services/notificationService');
-    const { getIO } = require('../socket');
 
     try {
         const { name, email, phone, password, userType, deviceId, deviceName } = req.body;
@@ -263,41 +268,7 @@ router.post('/register', registrationLimiter, async (req, res) => {
             console.log('✅ User created successfully in User collection:', user.name);
         }
 
-        // Send Welcome Notification
-        const io = getIO();
-        const notificationRecipientId = user._id.toString();
-        const notificationRecipientType = isDriver ? 'driver' : 'user';
-
-        if (io) {
-            // Welcome notification for all users
-            await NotificationService.notifySystem(io, notificationRecipientId, notificationRecipientType, {
-                title: '👋 Welcome to CharDhoGo',
-                message: `Thanks for joining us, ${name.split(' ')[0]}! We're excited to have you on board.`,
-                actionUrl: isDriver ? '/(driver)/tabs/profile' : '/account/profile',
-                priority: 'high'
-            });
-
-            // Additional notifications for drivers
-            if (isDriver) {
-                // Document upload reminder
-                await NotificationService.notifySystem(io, notificationRecipientId, notificationRecipientType, {
-                    title: '📄 Upload Your Documents',
-                    message: 'Please upload your driving license, Aadhar card, and vehicle RC to start accepting rides.',
-                    actionUrl: '/(driver)/tabs/profile',
-                    priority: 'high'
-                });
-
-                // Bank details reminder
-                await NotificationService.notifySystem(io, notificationRecipientId, notificationRecipientType, {
-                    title: '🏦 Add Bank Details',
-                    message: 'Set up your bank account to receive earnings. Verification required for payouts.',
-                    actionUrl: '/(driver)/bank-details',
-                    priority: 'medium'
-                });
-            }
-        }
-
-        // Generate Tokens
+        // Generate Tokens & respond FIRST — never block on notifications
         const tokens = generateTokens({ _id: user._id, userType: isDriver ? 'driver' : 'user' });
         await storeRefreshToken(user, tokens.refreshToken, deviceId || `web_${Date.now()}`, deviceName || 'Web Browser');
 
@@ -316,6 +287,45 @@ router.post('/register', registrationLimiter, async (req, res) => {
             refreshToken: tokens.refreshToken,
             user: { ...user.toJSON(), userType: isDriver ? 'driver' : 'user' }
         });
+
+        // Fire-and-forget: Send welcome notifications (non-blocking)
+        setImmediate(async () => {
+            try {
+                const NotificationService = require('../services/notificationService');
+                const { getIO } = require('../socket');
+                const io = getIO();
+                const notificationRecipientId = user._id.toString();
+                const notificationRecipientType = isDriver ? 'driver' : 'user';
+
+                if (io) {
+                    await NotificationService.notifySystem(io, notificationRecipientId, notificationRecipientType, {
+                        title: '👋 Welcome to CharDhoGo',
+                        message: `Thanks for joining us, ${name.split(' ')[0]}! We're excited to have you on board.`,
+                        actionUrl: isDriver ? '/(driver)/tabs/profile' : '/account/profile',
+                        priority: 'high'
+                    });
+
+                    if (isDriver) {
+                        await NotificationService.notifySystem(io, notificationRecipientId, notificationRecipientType, {
+                            title: '📄 Upload Your Documents',
+                            message: 'Please upload your driving license, Aadhar card, and vehicle RC to start accepting rides.',
+                            actionUrl: '/(driver)/tabs/profile',
+                            priority: 'high'
+                        });
+                        await NotificationService.notifySystem(io, notificationRecipientId, notificationRecipientType, {
+                            title: '🏦 Add Bank Details',
+                            message: 'Set up your bank account to receive earnings. Verification required for payouts.',
+                            actionUrl: '/(driver)/bank-details',
+                            priority: 'medium'
+                        });
+                    }
+                }
+            } catch (notifErr) {
+                // Non-critical — log but never crash the server
+                console.warn('⚠️ Welcome notification failed (non-critical):', notifErr.message);
+            }
+        });
+
     } catch (error) {
         console.error('❌ Registration error:', error);
         res.status(500).json({ success: false, message: 'Server error during registration', error: error.message });
@@ -390,7 +400,7 @@ router.post('/login', authLimiter, async (req, res) => {
 
         const refreshToken = jwt.sign(
             payload,
-            process.env.REFRESH_TOKEN_SECRET || process.env.JWT_SECRET + "_refresh",
+            getRefreshTokenSecret(),
             { expiresIn: process.env.REFRESH_TOKEN_EXPIRES_IN || '7d' }
         );
 
@@ -432,7 +442,7 @@ router.post('/refresh-token', async (req, res) => {
     try {
         console.log('🔄 Refresh Token Endpoint: Verifying token...');
         // Verify token signature
-        const decoded = jwt.verify(refreshToken, process.env.REFRESH_TOKEN_SECRET || process.env.JWT_SECRET + "_refresh");
+        const decoded = jwt.verify(refreshToken, getRefreshTokenSecret());
         console.log('✅ Refresh Token Endpoint: Token verified for ID:', decoded.id);
 
         // Find user in User collection first
@@ -487,19 +497,15 @@ router.post('/logout', async (req, res) => {
     if (!refreshToken) return res.status(200).json({ success: true, message: 'Logged out' });
 
     try {
-        // We decode to get ID, or just search all users (inefficient). 
-        // Better: client should send user ID or we rely on the refreshToken finding the user.
-        // Since we don't force auth middleware on logout (might be expired), we try to verify.
-
-        const decoded = jwt.decode(refreshToken); // Just decode to get ID
-        if (decoded && decoded.id) {
-            const user = await User.findById(decoded.id);
-            if (user) {
-                // Remove this token
-                user.refreshTokens = user.refreshTokens.filter(rt => rt.token !== refreshToken);
-                await user.save();
-            }
-        }
+        // Revoke session by token value directly; no need to trust decoded payload.
+        await User.updateOne(
+            { 'refreshTokens.token': refreshToken },
+            { $pull: { refreshTokens: { token: refreshToken } } }
+        );
+        await Driver.updateOne(
+            { 'refreshTokens.token': refreshToken },
+            { $pull: { refreshTokens: { token: refreshToken } } }
+        );
         res.json({ success: true, message: 'Logged out successfully' });
 
     } catch (error) {
@@ -608,8 +614,8 @@ router.post('/forgot-password', async (req, res) => {
             res.json({
                 success: true,
                 message: 'Password reset link has been sent to your email.',
-                // For development/testing only - remove in production
-                ...(process.env.NODE_ENV === 'development' && {
+                // For development/testing only, and only when explicitly enabled.
+                ...(process.env.NODE_ENV === 'development' && process.env.EXPOSE_RESET_DEBUG_DATA === 'true' && {
                     resetToken,
                     resetUrl,
                     // Add Expo Go compatible link

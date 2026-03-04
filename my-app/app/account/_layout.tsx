@@ -1,8 +1,13 @@
-import { Stack } from "expo-router";
+import { Redirect, Stack } from "expo-router";
 import { useSettings } from "../../context/SettingsContext";
+import { useAuth } from "../../context/AuthContext";
 
 export default function AccountLayout() {
     const { colors } = useSettings();
+    const { user, isLoading } = useAuth();
+
+    if (isLoading) return null;
+    if (!user) return <Redirect href="/login" />;
 
     return (
         <Stack

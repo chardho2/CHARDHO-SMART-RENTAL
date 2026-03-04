@@ -23,6 +23,19 @@ const mimeTypes = {
 };
 
 http.createServer((request, response) => {
+    // Add CORS headers to allow all access
+    response.setHeader('Access-Control-Allow-Origin', '*');
+    response.setHeader('Access-Control-Allow-Methods', 'GET, POST, PUT, DELETE, PATCH, OPTIONS');
+    response.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization, X-Requested-With');
+    response.setHeader('Access-Control-Max-Age', '86400');
+
+    // Handle preflight OPTIONS requests
+    if (request.method === 'OPTIONS') {
+        response.writeHead(200);
+        response.end();
+        return;
+    }
+
     let filePath = '.' + request.url;
     if (filePath == './') {
         filePath = './portals.html';

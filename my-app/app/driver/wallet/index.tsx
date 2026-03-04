@@ -4,9 +4,9 @@ import { router } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
 import { LinearGradient } from 'expo-linear-gradient';
 import axios from 'axios';
-import AsyncStorage from '@react-native-async-storage/async-storage';
+import { storageService } from '../../../services/storage';
 
-const API_URL = process.env.EXPO_PUBLIC_API_URL || 'http://localhost:5000/api';
+const API_URL = process.env.EXPO_PUBLIC_API_URL || 'http://localhost:4000/api';
 
 export default function DriverWalletScreen() {
     const [loading, setLoading] = useState(true);
@@ -16,7 +16,7 @@ export default function DriverWalletScreen() {
 
     const fetchWalletData = async () => {
         try {
-            const token = await AsyncStorage.getItem('token');
+            const token = await storageService.getToken();
             if (!token) return;
 
             // Parallel fetch for speed
@@ -56,7 +56,7 @@ export default function DriverWalletScreen() {
         }
 
         try {
-            const token = await AsyncStorage.getItem('token');
+            const token = await storageService.getToken();
             // Request full available balance
             const amount = walletData.payoutEligibleBalance;
 

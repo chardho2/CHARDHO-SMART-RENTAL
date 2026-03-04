@@ -3,9 +3,9 @@ import { View, Text, StyleSheet, Image, ActivityIndicator, TouchableOpacity, Sha
 import { Stack, router } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
 import axios from 'axios';
-import AsyncStorage from '@react-native-async-storage/async-storage';
 
 import { getBaseUrl } from '../../../services/api';
+import { storageService } from '../../../services/storage';
 
 export default function DriverQRScreen() {
     const [loading, setLoading] = useState(true);
@@ -17,7 +17,7 @@ export default function DriverQRScreen() {
 
     const fetchQR = async () => {
         try {
-            const token = await AsyncStorage.getItem('token');
+            const token = await storageService.getToken();
             const baseUrl = getBaseUrl();
             const response = await axios.get(`${baseUrl}/payment/qr`, {
                 headers: { Authorization: `Bearer ${token}` }

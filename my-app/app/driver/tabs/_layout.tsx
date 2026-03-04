@@ -1,10 +1,17 @@
 import React from "react";
+import { Redirect } from "expo-router";
 import { Tabs } from "expo-router/tabs";
 import { MaterialIcons, MaterialCommunityIcons } from "@expo/vector-icons";
 import { useSettings } from "../../../context/SettingsContext";
+import { useAuth } from "../../../context/AuthContext";
 
 export default function DriverTabsLayout() {
   const { colors, darkMode } = useSettings();
+  const { user, isLoading } = useAuth();
+
+  if (isLoading) return null;
+  if (!user) return <Redirect href="/login" />;
+  if (user.userType !== "driver") return <Redirect href="/(tabs)/home" />;
 
   return (
     <Tabs

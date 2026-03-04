@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Car Rental API Tester</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: Arial, sans-serif; background: #f5f5f5; padding: 20px; }
+        .container { max-width: 1200px; margin: 0 auto; }
+        h1 { color: #333; margin-bottom: 20px; }
+        .endpoint { background: white; padding: 20px; margin-bottom: 15px; border-radius: 8px; box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
+        .endpoint h3 { color: #2196F3; margin-bottom: 10px; }
+        button { background: #2196F3; color: white; border: none; padding: 10px 20px; border-radius: 4px; cursor: pointer; margin-right: 10px; }
+        button:hover { background: #1976D2; }
+        .response { background: #f9f9f9; padding: 15px; margin-top: 10px; border-radius: 4px; border-left: 4px solid #2196F3; }
+        pre { white-space: pre-wrap; word-wrap: break-word; }
+        .status { display: inline-block; padding: 5px 10px; border-radius: 4px; font-size: 12px; margin-left: 10px; }
+        .status.online { background: #4CAF50; color: white; }
+        .status.offline { background: #f44336; color: white; }
+        input, textarea { width: 100%; padding: 8px; margin: 5px 0; border: 1px solid #ddd; border-radius: 4px; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🚗 Car Rental API Tester <span id="serverStatus" class="status offline">Offline</span></h1>
+        
+        <div class="endpoint">
+            <h3>GET /status - Server Status</h3>
+            <button onclick="testEndpoint('/status')">Test</button>
+            <div id="response-status" class="response" style="display:none;"></div>
+        </div>
+
+        <div class="endpoint">
+            <h3>GET /cars - Get All Cars</h3>
+            <button onclick="testEndpoint('/cars')">Test</button>
+            <div id="response-cars" class="response" style="display:none;"></div>
+        </div>
+
+        <div class="endpoint">
+            <h3>GET /cars/available - Get Available Cars</h3>
+            <button onclick="testEndpoint('/cars/available')">Test</button>
+            <div id="response-available" class="response" style="display:none;"></div>
+        </div>
+
+        <div class="endpoint">
+            <h3>GET /bookings - Get All Bookings</h3>
+            <button onclick="testEndpoint('/bookings')">Test</button>
+            <div id="response-bookings" class="response" style="display:none;"></div>
+        </div>
+
+        <div class="endpoint">
+            <h3>POST /bookings - Create Booking</h3>
+            <input type="number" id="car_id" placeholder="Car ID" value="1">
+            <input type="text" id="customer_name" placeholder="Customer Name" value="John Doe">
+            <input type="date" id="start_date" value="">
+            <input type="date" id="end_date" value="">
+            <button onclick="createBooking()">Create Booking</button>
+            <div id="response-create-booking" class="response" style="display:none;"></div>
+        </div>
+
+        <div class="endpoint">
+            <h3>GET /drivers - Get All Drivers</h3>
+            <button onclick="testEndpoint('/drivers')">Test</button>
+            <div id="response-drivers" class="response" style="display:none;"></div>
+        </div>
+
+        <div class="endpoint">
+            <h3>GET /customers - Get All Customers</h3>
+            <button onclick="testEndpoint('/customers')">Test</button>
+            <div id="response-customers" class="response" style="display:none;"></div>
+        </div>
+    </div>
+
+    <script>
+        const API_URL = 'http://localhost:8080';
+
+        // Set default dates
+        document.getElementById('start_date').value = new Date().toISOString().split('T')[0];
+        const endDate = new Date();
+        endDate.setDate(endDate.getDate() + 7);
+        document.getElementById('end_date').value = endDate.toISOString().split('T')[0];
+
+        // Check server status on load
+        checkServerStatus();
+
+        async function checkServerStatus() {
+            try {
+                const response = await fetch(`${API_URL}/status`);
+                const data = await response.json();
+                const statusEl = document.getElementById('serverStatus');
+                statusEl.textContent = 'Online';
+                statusEl.className = 'status online';
+            } catch (error) {
+                const statusEl = document.getElementById('serverStatus');
+                statusEl.textContent = 'Offline';
+                statusEl.className = 'status offline';
+            }
+        }
+
+        async function testEndpoint(endpoint) {
+            const responseId = 'response-' + endpoint.replace(/\//g, '-').substring(1);
+            const responseEl = document.getElementById(responseId);
+            
+            try {
+                const response = await fetch(`${API_URL}${endpoint}`);
+                const data = await response.json();
+                
+                responseEl.innerHTML = `<strong>Status:</strong> ${response.status}<br><pre>${JSON.stringify(data, null, 2)}</pre>`;
+                responseEl.style.display = 'block';
+            } catch (error) {
+                responseEl.innerHTML = `<strong>Error:</strong> ${error.message}`;
+                responseEl.style.display = 'block';
+            }
+        }
+
+        async function createBooking() {
+            const responseEl = document.getElementById('response-create-booking');
+            
+            const bookingData = {
+                car_id: parseInt(document.getElementById('car_id').value),
+                customer_name: document.getElementById('customer_name').value,
+                start_date: document.getElementById('start_date').value,
+                end_date: document.getElementById('end_date').value
+            };
+
+            try {
+                const response = await fetch(`${API_URL}/bookings`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(bookingData)
+                });
+                const data = await response.json();
+                
+                responseEl.innerHTML = `<strong>Status:</strong> ${response.status}<br><pre>${JSON.stringify(data, null, 2)}</pre>`;
+                responseEl.style.display = 'block';
+            } catch (error) {
+                responseEl.innerHTML = `<strong>Error:</strong> ${error.message}`;
+                responseEl.style.display = 'block';
+            }
+        }
+
+        // Auto-refresh status every 5 seconds
+        setInterval(checkServerStatus, 5000);
+    </script>
+</body>
+</html>

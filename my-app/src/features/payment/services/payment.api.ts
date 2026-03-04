@@ -1,5 +1,5 @@
-import AsyncStorage from '@react-native-async-storage/async-storage';
 import { bookingAPI } from '../../../../services/bookingAPI';
+import { storageService } from '../../../../services/storage';
 
 // Define types for better safety
 export interface PaymentStatusResponse {
@@ -28,10 +28,10 @@ export const PaymentService = {
      */
     switchToCash: async (bookingId: string): Promise<PaymentStatusResponse> => {
         try {
-            const token = await AsyncStorage.getItem('driverToken');
-            const apiUrl = process.env.EXPO_PUBLIC_API_URL || 'http://192.168.1.4:4000';
+            const token = await storageService.getToken();
+            const apiUrl = process.env.EXPO_PUBLIC_API_URL || 'http://localhost:4000/api';
 
-            const response = await fetch(`${apiUrl}/api/booking/${bookingId}/switch-to-cash`, {
+            const response = await fetch(`${apiUrl}/booking/${bookingId}/switch-to-cash`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',

@@ -21,7 +21,7 @@
         "helmet": "^8.1.0",
         "jsonwebtoken": "^9.0.3",
         "mongoose": "^7.5.0",
-        "nodemailer": "^6.9.9",
+        "nodemailer": "^8.0.1",
         "nodemon": "^3.0.1",
         "qrcode": "^1.5.4",
         "razorpay": "^2.9.6",
@@ -29,6 +29,7 @@
         "xss-clean": "^0.1.4"
     },
     "devDependencies": {
+        "mongodb-memory-server": "^11.0.1",
         "nodemon": "^3.0.1"
     }
 }

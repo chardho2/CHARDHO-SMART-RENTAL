@@ -1,5 +1,5 @@
 const mongoose = require('mongoose');
-const URI = "mongodb+srv://muzamilmohammadk:Muzamil789@cluster0.r2ah3ab.mongodb.net/?appName=Cluster0";
+const URI = process.env.MONGODB_URI || "mongodb://127.0.0.1:27017/car_rental_dev";
 
 async function run() {
     try {

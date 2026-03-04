@@ -11,19 +11,15 @@ async function testConnection() {
 
     // CONFIGURATIONS TO TEST
     const configs = [
-        {
-            name: "SRV (Password: Muzamil789)",
-            uri: "mongodb+srv://muzamilmohammadk:Muzamil789@cluster0.r2ah3ab.mongodb.net/?retryWrites=true&w=majority"
-        },
-        {
-            name: "Standard (Password: Muzamil789)",
-            uri: "mongodb://muzamilmohammadk:Muzamil789@cluster0-shard-00-00.r2ah3ab.mongodb.net:27017,cluster0-shard-00-01.r2ah3ab.mongodb.net:27017,cluster0-shard-00-02.r2ah3ab.mongodb.net:27017/?ssl=true&authSource=admin"
-        },
-        {
-            name: "Standard (Password: Muzamil&789 - Encoded)",
-            uri: "mongodb://muzamilmohammadk:Muzamil%26789@cluster0-shard-00-00.r2ah3ab.mongodb.net:27017,cluster0-shard-00-01.r2ah3ab.mongodb.net:27017,cluster0-shard-00-02.r2ah3ab.mongodb.net:27017/?ssl=true&authSource=admin"
-        }
-    ];
+        { name: "Primary URI", uri: process.env.MONGODB_URI },
+        { name: "Fallback URI 1", uri: process.env.MONGODB_URI_FALLBACK_1 },
+        { name: "Fallback URI 2", uri: process.env.MONGODB_URI_FALLBACK_2 }
+    ].filter(c => !!c.uri);
+
+    if (configs.length === 0) {
+        log("No MongoDB URI configured. Set MONGODB_URI (and optional fallback vars).");
+        process.exit(1);
+    }
 
     for (const config of configs) {
         log(`\nTesting: ${config.name}`);

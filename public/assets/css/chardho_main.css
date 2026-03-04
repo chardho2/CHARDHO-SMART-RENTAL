@@ -170,12 +170,48 @@ nav.scrolled {
     color: var(--text);
     display: flex;
     align-items: center;
+    justify-content: center;
     gap: 10px;
     text-decoration: none;
 }
 
 .logo span {
     color: var(--primary);
+}
+
+.logo-img {
+    height: clamp(52px, 7vw, 88px);
+    width: auto;
+    display: block;
+    object-fit: contain;
+}
+
+nav .logo-img {
+    height: clamp(56px, 7.2vw, 92px);
+    margin: 0 auto;
+}
+
+.logo-img.footer {
+    height: clamp(96px, 14vw, 190px);
+}
+
+.logo-img.auth {
+    height: clamp(92px, 14vw, 176px);
+    margin: 0 auto 1rem;
+}
+
+@media (max-width: 768px) {
+    .logo-img {
+        height: clamp(44px, 12vw, 72px);
+    }
+
+    nav .logo-img {
+        height: clamp(46px, 12vw, 72px);
+    }
+
+    .logo-img.footer {
+        height: clamp(80px, 18vw, 128px);
+    }
 }
 
 .nav-links {
